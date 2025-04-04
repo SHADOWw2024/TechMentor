@@ -1,0 +1,4099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Connect students with tech mentors in cybersecurity, MERN stack, Web3, machine learning, cloud computing and IoT">
+  <title>TechMentor Connect | Professional Tech Mentorship</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Add Three.js library for 3D models -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #6e8efb;
+      --secondary-color: #a777e3;
+      --text-color: #333;
+      --bg-color: #f9f9f9;
+      --card-bg: #ffffff;
+      --border-color: #e0e0e0;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --radius: 8px;
+      --transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #7d9bff;
+      --secondary-color: #b389f0;
+      --text-color: #f0f0f0;
+      --bg-color: #1a202c;
+      --card-bg: #2d3748;
+      --border-color: #4a5568;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+      line-height: 1.6;
+      transition: var(--transition);
+      overflow-x: hidden;
+    }
+
+    .app {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header & Navigation */
+    .navbar {
+      background-color: var(--card-bg);
+      box-shadow: var(--shadow);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      transition: var(--transition);
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: 600;
+      font-size: 1.5rem;
+    }
+
+    .logo i {
+      margin-right: 0.5rem;
+      color: var(--primary-color);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--text-color);
+      position: relative;
+      padding: 0.5rem 0;
+      font-weight: 500;
+    }
+
+    .link-underline {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .nav-link:hover .link-underline {
+      width: 100%;
+    }
+
+    .cta-button {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .bar {
+      width: 25px;
+      height: 3px;
+      background-color: var(--text-color);
+      transition: var(--transition);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8rem 2rem 4rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      gap: 3rem;
+    }
+
+    .hero-content {
+      flex: 1;
+      max-width: 600px;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .title-word {
+      display: inline-block;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .title-word-1 { animation-delay: 0.1s; }
+    .title-word-2 { animation-delay: 0.2s; }
+    .title-word-3 { animation-delay: 0.3s; }
+    .title-word-4 { animation-delay: 0.4s; }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: var(--text-color);
+      opacity: 0.9;
+    }
+
+    .hero-search {
+      margin-bottom: 2rem;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 0.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .search-container i {
+      padding: 0 1rem;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    .search-container input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 0.8rem 0;
+      font-size: 1rem;
+      color: var(--text-color);
+      outline: none;
+    }
+
+    .search-button {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: calc(var(--radius) - 2px);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .search-button:hover {
+      opacity: 0.9;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .primary-button, .secondary-button {
+      padding: 0.8rem 1.5rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .primary-button {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+    }
+
+    .secondary-button {
+      background: transparent;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+    }
+
+    .primary-button:hover, .secondary-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-illustration {
+      flex: 1;
+      position: relative;
+      max-width: 600px;
+    }
+
+    .illustration-container {
+      position: relative;
+      width: 100%;
+      height: 400px;
+    }
+
+    .illustration {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .floating-elements {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .floating-element {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: var(--card-bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .element-1 {
+      top: 10%;
+      left: 5%;
+      animation-delay: 0s;
+      color: #61dafb;
+    }
+
+    .element-2 {
+      top: 70%;
+      left: 15%;
+      animation-delay: 1s;
+      color: #e74c3c;
+    }
+
+    .element-3 {
+      top: 30%;
+      right: 10%;
+      animation-delay: 2s;
+      color: #f39c12;
+    }
+
+    .element-4 {
+      bottom: 10%;
+      right: 5%;
+      animation-delay: 3s;
+      color: #9b59b6;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section-header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .section-header h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-color);
+    }
+
+    .section-subtitle {
+      color: var(--text-color);
+      opacity: 0.8;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Domain Cards */
+    .domain-container {
+      margin-top: 2rem;
+    }
+
+    .filters-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .college-select {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+
+    .college-dropdown {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      appearance: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .select-icon {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    .advanced-filters {
+      position: relative;
+    }
+
+    .filter-toggle {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 0.8rem 1.2rem;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: var(--text-color);
+      transition: var(--transition);
+    }
+
+    .filter-toggle:hover {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .filter-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      width: 300px;
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: var(--transition);
+    }
+
+    .advanced-filters:hover .filter-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .filter-group {
+      margin-bottom: 1rem;
+    }
+
+    .filter-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .filter-group select, .filter-group input[type="range"] {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+      color: var(--text-color);
+    }
+
+    .rating-filter {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .rating-filter input {
+      flex: 1;
+    }
+
+    .rating-filter span {
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .availability-options {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .option-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .toggle-slider {
+      position: relative;
+      width: 40px;
+      height: 20px;
+      background-color: #ddd;
+      border-radius: 20px;
+      transition: var(--transition);
+    }
+
+    .toggle-slider::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background-color: white;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: var(--transition);
+    }
+
+    input[type="checkbox"] {
+      display: none;
+    }
+
+    input[type="checkbox"]:checked + .toggle-slider {
+      background-color: var(--primary-color);
+    }
+
+    input[type="checkbox"]:checked + .toggle-slider::after {
+      transform: translateX(20px);
+    }
+
+    .domains-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .domain-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border-top: 4px solid var(--domain-color);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .domain-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .domain-icon {
+      width: 60px;
+      height: 60px;
+      background-color: var(--domain-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .domain-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-color);
+    }
+
+    .domain-description {
+      margin-bottom: 1.5rem;
+      color: var(--text-color);
+      opacity: 0.8;
+      flex: 1;
+    }
+
+    .card-footer {
+      margin-top: auto;
+    }
+
+    .explore-btn {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      transition: var(--transition);
+    }
+
+    .explore-btn:hover {
+      color: var(--secondary-color);
+    }
+
+    /* Community Section */
+    .community-container {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .community-chat-container {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 600px;
+    }
+
+    .chat-header {
+      padding: 1rem 1.5rem;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-header h3 {
+      font-size: 1.2rem;
+    }
+
+    .chat-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .online-count {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .chat-button {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .chat-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .messages-container {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 0.8rem 1rem;
+      border-radius: var(--radius);
+      position: relative;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background-color: var(--primary-color);
+      color: white;
+      border-bottom-right-radius: 0;
+    }
+
+    .message.mentor {
+      align-self: flex-start;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-bottom-left-radius: 0;
+    }
+
+    .message.anonymous {
+      background-color: #666;
+    }
+
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .user-name {
+      font-weight: 600;
+    }
+
+    .timestamp {
+      opacity: 0.8;
+    }
+
+    .message-text {
+      word-wrap: break-word;
+    }
+
+    .typing-indicator {
+      padding: 0 1.5rem 0.5rem;
+      font-size: 0.8rem;
+      color: var(--text-color);
+      opacity: 0.7;
+      height: 20px;
+    }
+
+    .message-form {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .message-input {
+      flex: 1;
+      padding: 0.8rem 1rem;
+      border: none;
+      background: transparent;
+      color: var(--text-color);
+      outline: none;
+    }
+
+    .message-actions {
+      display: flex;
+      align-items: center;
+      padding-right: 0.5rem;
+    }
+
+    .emoji-button, .send-button {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      opacity: 0.7;
+      cursor: pointer;
+      padding: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .emoji-button:hover, .send-button:hover {
+      opacity: 1;
+      color: var(--primary-color);
+    }
+
+    .send-button {
+      color: var(--primary-color);
+      opacity: 1;
+    }
+
+    .message-options {
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Community Sidebar */
+    .community-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .sidebar-section {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+    }
+
+    .sidebar-section h4 {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .badge {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+
+    .mentors-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .mentor-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.5rem;
+      border-radius: var(--radius);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .mentor-item:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] .mentor-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .mentor-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .mentor-info {
+      flex: 1;
+    }
+
+    .mentor-name {
+      font-weight: 500;
+    }
+
+    .mentor-specialty {
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .online-status {
+      width: 10px;
+      height: 10px;
+      background-color: #2ecc71;
+      border-radius: 50%;
+    }
+
+    .topics-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .topic-tag {
+      display: inline-block;
+      background-color: rgba(110, 142, 251, 0.1);
+      color: var(--primary-color);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .topic-tag:hover {
+      background-color: rgba(110, 142, 251, 0.2);
+    }
+
+    .guidelines-list {
+      list-style: none;
+    }
+
+    .guidelines-list li {
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .guidelines-list i {
+      color: var(--primary-color);
+    }
+
+    /* Resources Section */
+    .resources-filter {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .resource-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: var(--transition);
+      display: flex;
+    }
+
+    .resource-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .resource-image {
+      width: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .resource-content {
+      flex: 1;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .resource-type {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .resource-title {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .resource-description {
+      margin-bottom: 1rem;
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    .resource-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-bottom: 1rem;
+    }
+
+    .resource-actions {
+      margin-top: auto;
+    }
+
+    .resource-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .resource-link:hover {
+      color: var(--secondary-color);
+    }
+
+    /* Domain Page */
+    .domain-page-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .domain-header {
+      margin-bottom: 2rem;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      transition: var(--transition);
+    }
+
+    .back-button:hover {
+      color: var(--secondary-color);
+    }
+
+    .domain-title-container h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .domain-description {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      max-width: 800px;
+    }
+
+    .domain-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .mentors-section {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+    }
+
+    .mentors-section .section-header {
+      text-align: left;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mentors-section h3 {
+      font-size: 1.5rem;
+    }
+
+    .sort-options {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sort-dropdown {
+      padding: 0.5rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+      color: var(--text-color);
+    }
+
+    .mentors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .mentor-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border: 1px solid var(--border-color);
+    }
+
+    .mentor-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .mentor-header {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .mentor-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .mentor-details {
+      flex: 1;
+    }
+
+    .mentor-name {
+      font-size: 1.2rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .mentor-specialty {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-bottom: 0.5rem;
+    }
+
+    .mentor-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.9rem;
+    }
+
+    .mentor-rating i {
+      color: #f39c12;
+    }
+
+    .mentor-rating span {
+      margin-left: 0.3rem;
+      opacity: 0.8;
+    }
+
+    .mentor-bio {
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .mentor-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .skill-tag {
+      background-color: rgba(110, 142, 251, 0.1);
+      color: var(--primary-color);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+
+    .mentor-availability {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .mentor-availability i {
+      color: #2ecc71;
+    }
+
+    .mentor-actions {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .contact-btn, .schedule-btn {
+      flex: 1;
+      padding: 0.6rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .contact-btn {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+    }
+
+    .schedule-btn {
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+
+    .contact-btn:hover {
+      background-color: var(--secondary-color);
+    }
+
+    .schedule-btn:hover {
+      background-color: rgba(110, 142, 251, 0.1);
+    }
+
+    /* Quiz Section */
+    .quiz-section {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .quiz-section h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .quiz-section p {
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+
+    .quiz-toggle-btn {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .quiz-toggle-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    .quiz-levels {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .quiz-level-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+    }
+
+    .quiz-level-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .quiz-level-card h4 {
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .quiz-level-card p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-bottom: 1rem;
+    }
+
+    .quiz-progress-bar {
+      height: 8px;
+      background-color: var(--border-color);
+      border-radius: 4px;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    /* Domain Chat Section */
+    .domain-chat-section {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    /* AI Chatbot */
+    .ai-chatbot {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+      transition: var(--transition);
+    }
+
+    .ai-chatbot-toggle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      border: none;
+      transition: var(--transition);
+    }
+
+    .ai-chatbot-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .ai-chatbot-container {
+      position: absolute;
+      bottom: 80px;
+      right: 0;
+      width: 350px;
+      height: 500px;
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: none;
+      flex-direction: column;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: var(--transition);
+      border: 1px solid var(--border-color);
+    }
+
+    .ai-chatbot-container.active {
+      display: flex;
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .ai-chatbot-header {
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .ai-chatbot-title {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .ai-chatbot-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .ai-chatbot-messages {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      background-color: var(--bg-color);
+    }
+
+    .ai-message {
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ai-message-user {
+      align-self: flex-end;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.8rem 1rem;
+      border-radius: 1rem 1rem 0 1rem;
+      max-width: 80%;
+      margin-left: 20%;
+    }
+
+    .ai-message-bot {
+      align-self: flex-start;
+      background-color: var(--border-color);
+      color: var(--text-color);
+      padding: 0.8rem 1rem;
+      border-radius: 1rem 1rem 1rem 0;
+      max-width: 80%;
+      margin-right: 20%;
+    }
+
+    .ai-message-time {
+      font-size: 0.7rem;
+      color: var(--text-color);
+      opacity: 0.7;
+      margin-top: 0.3rem;
+      text-align: right;
+    }
+
+    .ai-chatbot-input {
+      padding: 1rem;
+      border-top: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+    }
+
+    .ai-chatbot-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.ai-chatbot-input-field {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 1.5rem;
+  outline: none;
+  font-size: 0.9rem;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  height: 40px;
+}
+
+    .ai-chatbot-send {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 0;
+  margin: 0;
+}
+
+.ai-chatbot-send:hover {
+  background-color: var(--secondary-color);
+  transform: scale(1.05);
+}
+
+    .ai-chatbot-typing {
+      padding: 0.3rem 1rem;
+      font-size: 0.8rem;
+      color: var(--text-color);
+      opacity: 0.7;
+      display: none;
+    }
+
+    .ai-chatbot-typing.active {
+      display: block;
+    }
+
+    /* 3D Model Viewer */
+    .model-viewer {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin: 2rem 0;
+      overflow: hidden;
+    }
+
+    .model-controls {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.5rem;
+      z-index: 10;
+    }
+
+    .model-control-btn {
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .model-control-btn:hover {
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .loading-spinner.active {
+      display: flex;
+    }
+
+    .spinner-container {
+      background-color: var(--card-bg);
+      padding: 2rem;
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(110, 142, 251, 0.2);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .spinner-text {
+      font-weight: 500;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      padding: 1rem 2rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Footer */
+    .footer {
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      padding: 3rem 0 0;
+      margin-top: 3rem;
+    }
+
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .footer-description {
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .social-links a {
+      color: var(--text-color);
+      opacity: 0.7;
+      transition: var(--transition);
+      font-size: 1.2rem;
+    }
+
+    .social-links a:hover {
+      opacity: 1;
+      color: var(--primary-color);
+    }
+
+    .footer-column h4 {
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+    }
+
+    .footer-column ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .footer-column a {
+      color: var(--text-color);
+      text-decoration: none;
+      opacity: 0.8;
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .footer-column a:hover {
+      opacity: 1;
+      color: var(--primary-color);
+    }
+
+    .footer-bottom {
+      padding: 1.5rem 2rem;
+      margin-top: 3rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-bottom p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-legal a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      transition: var(--transition);
+    }
+
+    .footer-legal a:hover {
+      opacity: 1;
+      color: var(--primary-color);
+    }
+
+    /* Dark Mode Toggle */
+    .dark-mode-toggle {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      border: none;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: var(--transition);
+    }
+
+    .dark-mode-toggle i {
+      position: absolute;
+      transition: var(--transition);
+    }
+
+    .dark-mode-toggle .fa-moon {
+      opacity: 0;
+    }
+
+    [data-theme="dark"] .dark-mode-toggle .fa-sun {
+      opacity: 0;
+    }
+
+    [data-theme="dark"] .dark-mode-toggle .fa-moon {
+      opacity: 1;
+    }
+
+    /* Background Circles */
+    .bg-circle {
+      position: fixed;
+      border-radius: 50%;
+      z-index: -1;
+      filter: blur(60px);
+      opacity: 0.15;
+    }
+
+    .circle-1 {
+      width: 300px;
+      height: 300px;
+      background-color: var(--primary-color);
+      top: -100px;
+      left: -100px;
+    }
+
+    .circle-2 {
+      width: 400px;
+      height: 400px;
+      background-color: var(--secondary-color);
+      bottom: -150px;
+      right: -100px;
+    }
+
+    .circle-3 {
+      width: 200px;
+      height: 200px;
+      background-color: #16a085;
+      top: 50%;
+      left: 30%;
+    }
+
+    /* Logout Button */
+    .btn-primary.logout {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      background-color: #dc3545;
+      border: none;
+      border-radius: var(--radius);
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-primary.logout:hover {
+      background-color: #c82333;
+    }
+
+    .btn-primary.logout i {
+      font-size: 1rem;
+    }
+
+    [data-theme="dark"] .btn-primary.logout {
+      background-color: #ff4444;
+    }
+
+    [data-theme="dark"] .btn-primary.logout:hover {
+      background-color: #cc3333;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 1200px) {
+      .hero-section {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 6rem;
+      }
+
+      .hero-cta {
+        justify-content: center;
+      }
+
+      .community-container {
+        grid-template-columns: 1fr;
+      }
+
+      .community-sidebar {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .nav-links {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background-color: var(--card-bg);
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        gap: 1.5rem;
+        box-shadow: var(--shadow);
+        transform: translateY(-100%);
+        opacity: 0;
+        transition: var(--transition);
+      }
+
+      .nav-links.active {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .menu-toggle {
+        display: flex;
+      }
+
+      .menu-toggle.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+      }
+
+      .menu-toggle.active .bar:nth-child(2) {
+        opacity: 0;
+      }
+
+      .menu-toggle.active .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+      }
+
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .resources-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 5rem 1.5rem 3rem;
+      }
+
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+
+      .search-container {
+        flex-direction: column;
+        background: none;
+        box-shadow: none;
+        gap: 0.5rem;
+      }
+
+      .search-container input {
+        width: 100%;
+        background-color: var(--card-bg);
+        border-radius: var(--radius);
+        padding: 0.8rem 1rem;
+        box-shadow: var(--shadow);
+      }
+
+      .search-button {
+        width: 100%;
+      }
+
+      .hero-cta {
+        flex-direction: column;
+      }
+
+      .section-header h2 {
+        font-size: 2rem;
+      }
+
+      .domain-card h3 {
+        font-size: 1.3rem;
+      }
+
+      .mentors-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quiz-levels {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-chatbot {
+        bottom: 20px;
+        right: 20px;
+      }
+
+      .ai-chatbot-container {
+        width: 300px;
+        height: 450px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .nav-container {
+        padding: 1rem;
+      }
+
+      .main-content {
+        padding: 1rem;
+      }
+
+      .footer-container {
+        padding: 0 1rem;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-legal {
+        justify-content: center;
+      }
+
+      .dark-mode-toggle {
+        bottom: 20px;
+        left: 20px;
+        width: 40px;
+        height: 40px;
+      }
+
+      .ai-chatbot-toggle {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" aria-label="Toggle dark mode">
+      <i class="fas fa-moon"></i>
+      <i class="fas fa-sun"></i>
+    </button>
+    
+    <!-- Animated Background Elements -->
+    <div class="bg-circle circle-1"></div>
+    <div class="bg-circle circle-2"></div>
+    <div class="bg-circle circle-3"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar" aria-label="Main navigation">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <a href="#" id="home-link" class="logo">
+            <i class="fas fa-code"></i>
+            <span>TechMentor</span>
+          </a>
+        </div>
+        <div class="nav-links">
+          <a href="#" id="domains-link" class="nav-link">
+            <span>Domains</span>
+            <div class="link-underline"></div>
+          </a>
+          <a href="#" id="community-link" class="nav-link">
+            <span>Community</span>
+            <div class="link-underline"></div>
+          </a>
+          <a href="#" id="resources-link" class="nav-link">
+            <span>Resources</span>
+            <div class="link-underline"></div>
+          </a>
+          <button id="logout-btn" class="btn-primary logout">
+            <span>Sign Out</span>
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+          <button class="cta-button" id="ask-ai-btn">
+            <i class="fas fa-robot"></i>
+            <span>Ask AI</span>
+          </button>
+        </div>
+        <button class="menu-toggle" aria-label="Menu" aria-expanded="false">
+          <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </div>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section" role="banner">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="title-word title-word-1">Connect</span>
+          <span class="title-word title-word-2">with</span>
+          <span class="title-word title-word-3">Tech</span>
+          <span class="title-word title-word-4">Mentors</span>
+        </h1>
+        <p class="hero-subtitle">Bridge the gap between students and industry experts in cutting-edge technologies</p>
+        <div class="hero-search">
+          <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search mentors or topics..." id="global-search">
+            <button class="search-button">Search</button>
+          </div>
+        </div>
+        <div class="hero-cta">
+          <button class="primary-button" id="explore-domains">Explore Domains</button>
+          <button class="secondary-button" id="join-community">Join Community</button>
+        </div>
+      </div>
+      <div class="hero-illustration">
+        <div class="illustration-container">
+          <img src="https://illustrations.popsy.co/amber/code-typing.svg" alt="Coding illustration" class="illustration">
+          <div class="floating-elements">
+            <div class="floating-element element-1"><i class="fab fa-react"></i></div>
+            <div class="floating-element element-2"><i class="fas fa-shield-alt"></i></div>
+            <div class="floating-element element-3"><i class="fas fa-cloud"></i></div>
+            <div class="floating-element element-4"><i class="fas fa-robot"></i></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content" role="main">
+      <!-- Home Section -->
+      <section id="home" class="section active" aria-labelledby="domains-heading">
+        <div class="section-header">
+          <h2 id="domains-heading">Technology Domains</h2>
+          <p class="section-subtitle">Select your area of interest to find specialized mentors</p>
+        </div>
+        
+        <div class="domain-container">
+          <div class="filters-container">
+            <div class="college-select">
+              <div class="select-wrapper">
+                <select id="college-dropdown" class="college-dropdown" aria-label="Select your college">
+                  <option value="" disabled selected>Select Your College</option>
+                  <option value="college1">Sahrdaya College of Engineering</option>
+                  <option value="college2">Christ College</option>
+                  <option value="college3">IIT Delhi</option>
+                  <option value="other">Other Institution</option>
+                </select>
+                <i class="fas fa-chevron-down select-icon"></i>
+              </div>
+            </div>
+            
+            <div class="advanced-filters">
+              <button class="filter-toggle" id="filter-toggle">
+                <i class="fas fa-sliders-h"></i>
+                <span>Filters</span>
+              </button>
+              
+              <div class="filter-dropdown" id="filter-dropdown">
+                <div class="filter-group">
+                  <label for="rating-filter">Minimum Rating</label>
+                  <div class="rating-filter">
+                    <input type="range" id="rating-filter" min="1" max="5" step="0.1" value="3.5">
+                    <span id="rating-value">3.5+</span>
+                  </div>
+                </div>
+                
+                <div class="filter-group">
+                  <label for="experience-filter">Minimum Experience</label>
+                  <select id="experience-filter">
+                    <option value="0">Any</option>
+                    <option value="1">1+ years</option>
+                    <option value="2">2+ years</option>
+                    <option value="3" selected>3+ years</option>
+                    <option value="5">5+ years</option>
+                  </select>
+                </div>
+                
+                <div class="filter-group">
+                  <label>Availability</label>
+                  <div class="availability-options">
+                    <label class="option-toggle">
+                      <input type="checkbox" id="available-now" checked>
+                      <span class="toggle-slider"></span>
+                      <span>Available Now</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="domains-grid" role="list">
+            <!-- Cybersecurity -->
+            <div class="domain-card" style="--domain-color: #e74c3c;" role="listitem">
+              <div class="card-inner">
+                <div class="domain-icon">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Cybersecurity</h3>
+                <p class="domain-description">Learn about network security, ethical hacking, and penetration testing</p>
+                <div class="card-footer">
+                  <button class="explore-btn" data-domain="cybersecurity">
+                    <span>Explore</span>
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- MERN Stack -->
+            <div class="domain-card" style="--domain-color: #2ecc71;" role="listitem">
+              <div class="card-inner">
+                <div class="domain-icon">
+                  <i class="fas fa-code"></i>
+                </div>
+                <h3>MERN Stack</h3>
+                <p class="domain-description">Master MongoDB, Express, React, and Node.js for full-stack development</p>
+                <div class="card-footer">
+                  <button class="explore-btn" data-domain="mern">
+                    <span>Explore</span>
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Web3 -->
+            <div class="domain-card" style="--domain-color: #9b59b6;" role="listitem">
+              <div class="card-inner">
+                <div class="domain-icon">
+                  <i class="fas fa-link"></i>
+                </div>
+                <h3>Web3</h3>
+                <p class="domain-description">Explore blockchain, smart contracts, and decentralized applications</p>
+                <div class="card-footer">
+                  <button class="explore-btn" data-domain="web3">
+                    <span>Explore</span>
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Machine Learning -->
+            <div class="domain-card" style="--domain-color: #3498db;" role="listitem">
+              <div class="card-inner">
+                <div class="domain-icon">
+                  <i class="fas fa-brain"></i>
+                </div>
+                <h3>Machine Learning</h3>
+                <p class="domain-description">Dive into AI, neural networks, and data science</p>
+                <div class="card-footer">
+                  <button class="explore-btn" data-domain="ml">
+                    <span>Explore</span>
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Cloud Computing -->
+            <div class="domain-card" style="--domain-color: #f39c12;" role="listitem">
+              <div class="card-inner">
+                <div class="domain-icon">
+                  <i class="fas fa-cloud"></i>
+                </div>
+                <h3>Cloud Computing</h3>
+                <p class="domain-description">Master AWS, Azure and GCP with real-world deployment scenarios</p>
+                <div class="card-footer">
+                  <button class="explore-btn" data-domain="cloud">
+                    <span>Explore</span>
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- IoT -->
+            <div class="domain-card" style="--domain-color: #16a085;" role="listitem">
+              <div class="card-inner">
+                <div class="domain-icon">
+                  <i class="fas fa-microchip"></i>
+                </div>
+                <h3>IoT</h3>
+                <p class="domain-description">Learn Internet of Things with embedded systems and sensors</p>
+                <div class="card-footer">
+                  <button class="explore-btn" data-domain="iot">
+                    <span>Explore</span>
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3D Model Viewer Section -->
+        <div class="model-viewer" id="model-viewer">
+          <div class="model-controls">
+            <button class="model-control-btn" id="rotate-model"><i class="fas fa-sync-alt"></i></button>
+            <button class="model-control-btn" id="zoom-in-model"><i class="fas fa-search-plus"></i></button>
+            <button class="model-control-btn" id="zoom-out-model"><i class="fas fa-search-minus"></i></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Community Section -->
+      <section id="community" class="section" aria-labelledby="community-heading">
+        <div class="section-header">
+          <h2 id="community-heading">Community Hub</h2>
+          <p class="section-subtitle">Join discussions with students and mentors across all domains</p>
+        </div>
+        
+        <div class="community-container">
+          <div class="community-chat-container">
+            <div class="chat-header">
+              <h3>Community Discussion</h3>
+              <div class="chat-controls">
+                <div class="online-count">
+                  <i class="fas fa-users"></i>
+                  <span>24 online</span>
+                </div>
+                <button class="chat-button" id="chat-help">
+                  <i class="fas fa-question-circle"></i>
+                  <span>Help</span>
+                </button>
+              </div>
+            </div>
+            <div class="messages-container" id="community-chat" role="region" aria-live="polite">
+              <!-- Messages will be inserted here by JavaScript -->
+            </div>
+            <div class="typing-indicator" id="community-typing"></div>
+            <form class="message-form" id="community-form">
+              <div class="input-group">
+                <input type="text" placeholder="Type your message..." class="message-input" required>
+                <div class="message-actions">
+                  <button type="button" class="emoji-button" aria-label="Add emoji">
+                    <i class="far fa-smile"></i>
+                  </button>
+                  <button type="submit" class="send-button">
+                    <i class="fas fa-paper-plane"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="message-options">
+                <label class="option-toggle">
+                  <input type="checkbox" id="anonymous-community">
+                  <span class="toggle-slider"></span>
+                  <span>Post Anonymously</span>
+                </label>
+              </div>
+            </form>
+          </div>
+          
+          <div class="community-sidebar">
+            <div class="sidebar-section">
+              <h4>Online Mentors <span class="badge">24</span></h4>
+              <div class="mentors-list">
+                <!-- Mentors will be inserted here by JavaScript -->
+              </div>
+            </div>
+            <div class="sidebar-section">
+              <h4>Popular Topics</h4>
+              <div class="topics-list">
+                <a href="#" class="topic-tag">#reactjs</a>
+                <a href="#" class="topic-tag">#cybersecurity</a>
+                <a href="#" class="topic-tag">#machinelearning</a>
+                <a href="#" class="topic-tag">#web3</a>
+                <a href="#" class="topic-tag">#careeradvice</a>
+                <a href="#" class="topic-tag">#interviewtips</a>
+                <a href="#" class="topic-tag">#codinghelp</a>
+                <a href="#" class="topic-tag">#devops</a>
+              </div>
+            </div>
+            <div class="sidebar-section">
+              <h4>Community Guidelines</h4>
+              <ul class="guidelines-list">
+                <li><i class="fas fa-check-circle"></i> Be respectful to everyone</li>
+                <li><i class="fas fa-check-circle"></i> Keep discussions on-topic</li>
+                <li><i class="fas fa-check-circle"></i> No spam or self-promotion</li>
+                <li><i class="fas fa-check-circle"></i> Help others when you can</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Resources Section -->
+      <section id="resources" class="section" aria-labelledby="resources-heading">
+        <div class="section-header">
+          <h2 id="resources-heading">Learning Resources</h2>
+          <p class="section-subtitle">Curated resources recommended by our mentors</p>
+        </div>
+        
+        <div class="resources-container">
+          <div class="resources-filter">
+            <div class="filter-group">
+              <label for="resource-domain">Filter by Domain:</label>
+              <select id="resource-domain">
+                <option value="all">All Domains</option>
+                <option value="cybersecurity">Cybersecurity</option>
+                <option value="mern">MERN Stack</option>
+                <option value="web3">Web3</option>
+                <option value="ml">Machine Learning</option>
+                <option value="cloud">Cloud Computing</option>
+                <option value="iot">IoT</option>
+              </select>
+            </div>
+            
+            <div class="filter-group">
+              <label for="resource-type">Filter by Type:</label>
+              <select id="resource-type">
+                <option value="all">All Types</option>
+                <option value="course">Courses</option>
+                <option value="book">Books</option>
+                <option value="tutorial">Tutorials</option>
+                <option value="article">Articles</option>
+                <option value="video">Videos</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="resources-grid">
+            <!-- Resources will be inserted here by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Domain Page Section -->
+      <section id="domain" class="section" aria-labelledby="domain-title">
+        <div class="domain-page-container">
+          <div class="domain-header">
+            <button class="back-button" id="back-to-domains">
+              <i class="fas fa-arrow-left"></i>
+              <span>Back to Domains</span>
+            </button>
+            <div class="domain-title-container">
+              <h1 id="domain-title"></h1>
+              <p id="domain-description" class="domain-description"></p>
+            </div>
+          </div>
+          
+          <div class="domain-content">
+            <!-- Mentors Section -->
+            <div class="mentors-section" id="mentors-section">
+              <div class="section-header">
+                <h3>Available Mentors</h3>
+                <div class="sort-options">
+                  <span>Sort by:</span>
+                  <select class="sort-dropdown" id="mentor-sort">
+                    <option value="experience">Experience</option>
+                    <option value="rating">Rating</option>
+                    <option value="availability">Availability</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mentors-grid" role="list">
+                <!-- Mentors will be inserted here by JavaScript -->
+              </div>
+            </div>
+            
+            <!-- Quiz Section -->
+            <div class="quiz-section" id="quiz-section">
+              <h3>Test Your Knowledge</h3>
+              <p>Take quizzes to assess your understanding and track your progress in this domain.</p>
+              
+              <button class="quiz-toggle-btn" id="start-quiz-btn">
+                <i class="fas fa-play"></i>
+                Start New Quiz
+              </button>
+              
+              <div class="quiz-levels" id="quiz-levels">
+                <!-- Levels will be populated by JavaScript -->
+              </div>
+            </div>
+            
+            <!-- Chat Section -->
+            <div class="domain-chat-section">
+              <div id="domain-chat" class="community-chat-container">
+                <!-- Chat content will be dynamically inserted by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- AI Chatbot -->
+    <div class="ai-chatbot">
+      <button class="ai-chatbot-toggle" id="ai-chatbot-toggle">
+        <i class="fas fa-robot"></i>
+      </button>
+      <div class="ai-chatbot-container" id="ai-chatbot-container">
+        <div class="ai-chatbot-header">
+          <div class="ai-chatbot-title">Tech Mentor AI Assistant</div>
+          <button class="ai-chatbot-close" id="ai-chatbot-close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="ai-chatbot-messages" id="ai-chatbot-messages">
+          <div class="ai-message">
+            <div class="ai-message-bot">Hello! I'm your Tech Mentor AI assistant. How can I help you with technology questions today?</div>
+            <div class="ai-message-time">Just now</div>
+          </div>
+        </div>
+        <div class="ai-chatbot-typing" id="ai-chatbot-typing">AI is typing...</div>
+        <div class="ai-chatbot-input">
+          <form id="ai-chatbot-form">
+            <input type="text" class="ai-chatbot-input-field" placeholder="Ask me anything about technology..." required>
+            <button type="submit" class="ai-chatbot-send">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loading-spinner">
+      <div class="spinner-container">
+        <div class="spinner"></div>
+        <div class="spinner-text">Loading</div>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <a href="#" class="logo">
+            <i class="fas fa-code"></i>
+            <span>TechMentor</span>
+          </a>
+          <p class="footer-description">Connecting students with industry experts for personalized tech mentorship.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Platform</h4>
+            <ul>
+              <li><a href="#">How it works</a></li>
+              <li><a href="#">For Students</a></li>
+              <li><a href="#">For Mentors</a></li>
+              <li><a href="#">Testimonials</a></li>
+              <li><a href="#">Pricing</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Resources</h4>
+            <ul>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Guides</a></li>
+              <li><a href="#">Webinars</a></li>
+              <li><a href="#">Community</a></li>
+              <li><a href="#">Help Center</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Careers</a></li>
+              <li><a href="#">Contact</a></li>
+              <li><a href="#">Press</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 TechMentor Connect. All rights reserved.</p>
+        <div class="footer-legal">
+          <a href="#">Terms of Service</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Data Structure with 6 domains
+    const DOMAINS = {
+  cybersecurity: {
+    name: "Cybersecurity",
+    description: "Learn about network security, ethical hacking, and penetration testing from industry professionals",
+    icon: "fa-shield-alt",
+    color: "#e74c3c",
+    quizTopics: {
+      beginner: ["Security Fundamentals", "Common Threats", "Basic Defenses", "Password Security", "Malware Types"],
+      intermediate: ["Network Security", "Cryptography Basics", "Risk Management", "Firewall Configuration", "Incident Handling"],
+      advanced: ["Penetration Testing", "Incident Response", "Security Architecture", "Forensic Analysis", "Threat Intelligence"]
+    },
+    resources: [
+      {
+        id: 1,
+        title: "The Web Application Hacker's Handbook",
+        description: "Comprehensive guide to web application security testing",
+        type: "book",
+        url: "#",
+        recommendedBy: "Sana Mohammad Sahi"
+      },
+      {
+        id: 2, 
+        title: "TryHackMe Learning Path",
+        description: "Interactive cybersecurity training platform",
+        type: "course",
+        url: "#",
+        recommendedBy: "Aaron Thomas"
+      }
+    ],
+    mentors: [
+      { 
+        id: 1,
+        name: "Sana Mohammad Sahi",
+        expertise: "Network Security Expert",
+        skills: ["CISSP Certified", "Penetration Testing"],
+        experience: 5,
+        rating: 4.9,
+        image: "https://randomuser.me/api/portraits/women/44.jpg",
+        isAvailable: true,
+        bio: "Security professional with 5+ years of experience in network security and ethical hacking. Certified CISSP and CEH.",
+        availability: "Available Mon-Fri, 9am-5pm"
+      },
+      {
+        id: 2,
+        name: "Aaron Thomas",
+        expertise: "Ethical Hacker",
+        skills: ["CEH Certified", "Bug Bounty"],
+        experience: 3,
+        rating: 4.7,
+        image: "https://randomuser.me/api/portraits/men/32.jpg",
+        isAvailable: true,
+        bio: "Bug bounty hunter and security researcher. Specializes in web application security and penetration testing.",
+        availability: "Available Wed-Sun, 12pm-8pm"
+      }
+    ]
+  },
+  mern: {
+    name: "MERN Stack",
+    description: "Master MongoDB, Express, React, and Node.js for full-stack development",
+    icon: "fa-code",
+    color: "#2ecc71",
+    quizTopics: {
+      beginner: ["JavaScript Basics", "React Fundamentals", "Node.js Intro", "MongoDB CRUD", "Component Lifecycle"],
+      intermediate: ["State Management", "API Development", "Database Design", "Middleware Concepts", "Authentication"],
+      advanced: ["Performance Optimization", "Advanced Hooks", "Serverless Deployment", "Microservices", "Real-time Applications"]
+    },
+    resources: [
+      {
+        id: 3,
+        title: "Fullstack Open",
+        description: "Free course from University of Helsinki",
+        type: "course",
+        url: "#",
+        recommendedBy: "Adhitya K B"
+      },
+      {
+        id: 4,
+        title: "React Documentation",
+        description: "Official React.js documentation",
+        type: "tutorial",
+        url: "#",
+        recommendedBy: "Emily Chen"
+      }
+    ],
+    mentors: [
+      {
+        id: 3,
+        name: "Adhitya K B",
+        expertise: "Full Stack Developer",
+        skills: ["React", "Node.js", "MongoDB"],
+        experience: 4,
+        rating: 4.8,
+        image: "https://randomuser.me/api/portraits/men/65.jpg",
+        isAvailable: false,
+        bio: "Senior full-stack developer with expertise in MERN stack applications. Passionate about teaching clean code practices.",
+        availability: "Available Tue-Thu, 10am-4pm"
+      },
+      {
+        id: 4,
+        name: "Emily Chen",
+        expertise: "React Specialist",
+        skills: ["React Hooks", "Context API", "Redux"],
+        experience: 3,
+        rating: 4.6,
+        image: "https://randomuser.me/api/portraits/women/33.jpg",
+        isAvailable: true,
+        bio: "Frontend developer specializing in React.js. Contributor to several open-source React libraries.",
+        availability: "Available Mon-Fri, 1pm-6pm"
+      }
+    ]
+  },
+  web3: {
+    name: "Web3 & Blockchain",
+    description: "Explore blockchain technology and decentralized applications",
+    icon: "fa-link",
+    color: "#9b59b6",
+    quizTopics: {
+      beginner: ["Blockchain Basics", "Cryptocurrency Concepts", "Wallet Security", "Smart Contract Intro", "Consensus Mechanisms"],
+      intermediate: ["Solidity Programming", "DeFi Principles", "NFT Standards", "DAO Governance", "Oracles"],
+      advanced: ["Layer 2 Solutions", "ZK-Rollups", "Smart Contract Security", "Tokenomics Design", "Cross-chain Bridges"]
+    },
+    resources: [
+      {
+        id: 5,
+        title: "Solidity Documentation",
+        description: "Official docs for Ethereum smart contracts",
+        type: "tutorial",
+        url: "#",
+        recommendedBy: "Adwaith Jayashaker"
+      },
+      {
+        id: 6,
+        title: "Ethereum Developer Resources",
+        description: "Collection of Ethereum development tools",
+        type: "article",
+        url: "#",
+        recommendedBy: "Raj Patel"
+      }
+    ],
+    mentors: [
+      {
+        id: 5,
+        name: "Adwaith Jayashaker",
+        expertise: "Blockchain Developer",
+        skills: ["Solidity", "Ethereum", "Smart Contracts"],
+        experience: 2,
+        rating: 4.5,
+        image: "https://randomuser.me/api/portraits/men/22.jpg",
+        isAvailable: true,
+        bio: "Blockchain developer specializing in Ethereum and smart contract development. Contributor to several open-source Web3 projects.",
+        availability: "Available Mon-Fri, 1pm-7pm"
+      },
+      {
+        id: 6,
+        name: "Raj Patel",
+        expertise: "DeFi Specialist",
+        skills: ["DeFi Protocols", "Token Standards", "DAO Governance"],
+        experience: 3,
+        rating: 4.7,
+        image: "https://randomuser.me/api/portraits/men/45.jpg",
+        isAvailable: false,
+        bio: "DeFi developer with experience building decentralized finance applications. Previously worked at a major crypto exchange.",
+        availability: "Available Wed-Sat, 11am-5pm"
+      }
+    ]
+  },
+  ml: {
+    name: "Machine Learning",
+    description: "Dive into AI, neural networks and data science",
+    icon: "fa-brain",
+    color: "#3498db",
+    quizTopics: {
+      beginner: ["ML Concepts", "Supervised Learning", "Python for ML", "Pandas Basics", "Linear Regression"],
+      intermediate: ["Neural Networks", "Feature Engineering", "Model Evaluation", "TensorFlow Basics", "CNN Fundamentals"],
+      advanced: ["Transformer Models", "Reinforcement Learning", "Hyperparameter Tuning", "Model Deployment", "Explainable AI"]
+    },
+    resources: [
+      {
+        id: 7,
+        title: "Fast.ai Practical Deep Learning",
+        description: "Free course focused on practical deep learning",
+        type: "course",
+        url: "#",
+        recommendedBy: "Neha Gupta"
+      },
+      {
+        id: 8,
+        title: "Hands-On Machine Learning",
+        description: "Book covering practical ML with Scikit-Learn and TensorFlow",
+        type: "book",
+        url: "#",
+        recommendedBy: "David Wilson"
+      }
+    ],
+    mentors: [
+      {
+        id: 7,
+        name: "Neha Gupta",
+        expertise: "ML Engineer",
+        skills: ["TensorFlow", "Computer Vision", "NLP"],
+        experience: 4,
+        rating: 4.9,
+        image: "https://randomuser.me/api/portraits/women/29.jpg",
+        isAvailable: true,
+        bio: "Machine learning engineer with expertise in computer vision and natural language processing. Previously worked at Google AI.",
+        availability: "Available Mon-Wed, 9am-3pm"
+      },
+      {
+        id: 8,
+        name: "David Wilson",
+        expertise: "Data Scientist",
+        skills: ["Scikit-Learn", "Pandas", "Data Visualization"],
+        experience: 3,
+        rating: 4.6,
+        image: "https://randomuser.me/api/portraits/men/68.jpg",
+        isAvailable: true,
+        bio: "Data scientist specializing in predictive modeling and data analysis. Strong focus on explainable AI and model interpretability.",
+        availability: "Available Tue-Thu, 10am-4pm"
+      }
+    ]
+  },
+  cloud: {
+    name: "Cloud Computing",
+    description: "Learn AWS, Azure and GCP with real-world deployment",
+    icon: "fa-cloud",
+    color: "#f39c12",
+    quizTopics: {
+      beginner: ["Cloud Concepts", "Virtual Machines", "Storage Basics", "IAM Fundamentals", "Serverless Intro"],
+      intermediate: ["VPC Configuration", "Load Balancing", "Database Services", "Containerization", "Auto Scaling"],
+      advanced: ["Multi-cloud Architecture", "Disaster Recovery", "Cost Optimization", "Security Best Practices", "DevOps Integration"]
+    },
+    resources: [
+      {
+        id: 9,
+        title: "AWS Certified Cloud Practitioner",
+        description: "FreeCodeCamp's free certification course",
+        type: "course",
+        url: "#",
+        recommendedBy: "Michael Johnson"
+      },
+      {
+        id: 10,
+        title: "Azure Fundamentals Guide",
+        description: "Microsoft's official Azure learning path",
+        type: "course",
+        url: "#",
+        recommendedBy: "Sarah Williams"
+      }
+    ],
+    mentors: [
+      {
+        id: 9,
+        name: "Michael Johnson",
+        expertise: "AWS Architect",
+        skills: ["AWS Certified", "Serverless", "Cloud Security"],
+        experience: 3,
+        rating: 4.6,
+        image: "https://randomuser.me/api/portraits/men/75.jpg",
+        isAvailable: false,
+        bio: "AWS Solutions Architect with experience in designing and deploying scalable cloud infrastructure.",
+        availability: "Available Fri-Sun, 11am-6pm"
+      },
+      {
+        id: 10,
+        name: "Sarah Williams",
+        expertise: "Azure Specialist",
+        skills: ["Azure DevOps", "ARM Templates", "Cosmos DB"],
+        experience: 4,
+        rating: 4.7,
+        image: "https://randomuser.me/api/portraits/women/68.jpg",
+        isAvailable: true,
+        bio: "Cloud engineer specializing in Microsoft Azure services. Certified Azure Solutions Architect Expert.",
+        availability: "Available Mon-Thu, 8am-2pm"
+      }
+    ]
+  },
+  iot: {
+    name: "IoT",
+    description: "Master Internet of Things with embedded systems and sensors",
+    icon: "fa-microchip",
+    color: "#16a085",
+    quizTopics: {
+      beginner: ["IoT Concepts", "Sensor Types", "Basic Circuits", "MQTT Protocol", "Arduino Basics"],
+      intermediate: ["Edge Computing", "Data Processing", "Wireless Protocols", "Power Management", "Firmware Development"],
+      advanced: ["Industrial IoT", "AI at the Edge", "Security Challenges", "5G Integration", "Digital Twins"]
+    },
+    resources: [
+      {
+        id: 11,
+        title: "IoT for Beginners",
+        description: "12-week curriculum from Microsoft",
+        type: "course",
+        url: "#",
+        recommendedBy: "Sarah Williams"
+      },
+      {
+        id: 12,
+        title: "Raspberry Pi Projects",
+        description: "Collection of IoT projects using Raspberry Pi",
+        type: "tutorial",
+        url: "#",
+        recommendedBy: "Robert Chen"
+      }
+    ],
+    mentors: [
+      {
+        id: 11,
+        name: "Sarah Williams",
+        expertise: "IoT Engineer",
+        skills: ["Embedded Systems", "Raspberry Pi", "Sensor Networks"],
+        experience: 4,
+        rating: 4.7,
+        image: "https://randomuser.me/api/portraits/women/68.jpg",
+        isAvailable: true,
+        bio: "IoT specialist with experience in designing and implementing smart city solutions and industrial IoT applications.",
+        availability: "Available Mon-Thu, 8am-2pm"
+      },
+      {
+        id: 12,
+        name: "Robert Chen",
+        expertise: "Embedded Systems Engineer",
+        skills: ["Microcontrollers", "Circuit Design", "Low-Power Systems"],
+        experience: 5,
+        rating: 4.8,
+        image: "https://randomuser.me/api/portraits/men/52.jpg",
+        isAvailable: true,
+        bio: "Hardware engineer specializing in embedded systems and IoT device development. Strong background in electronics and firmware.",
+        availability: "Available Tue-Fri, 9am-3pm"
+      }
+    ]
+  }
+};
+
+const onlineMentors = [
+  { id: 1, name: "Sana Mohammad Sahi", specialty: "Cybersecurity Expert", domain: "cybersecurity", image: "https://randomuser.me/api/portraits/women/44.jpg", isTyping: false },
+  { id: 2, name: "Aaron Thomas", specialty: "Ethical Hacker", domain: "cybersecurity", image: "https://randomuser.me/api/portraits/men/32.jpg", isTyping: false },
+  { id: 3, name: "Adhitya K B", specialty: "MERN Stack Developer", domain: "mern", image: "https://randomuser.me/api/portraits/men/65.jpg", isTyping: true },
+  { id: 4, name: "Emily Chen", specialty: "React Specialist", domain: "mern", image: "https://randomuser.me/api/portraits/women/33.jpg", isTyping: false },
+  { id: 5, name: "Adwaith Jayashaker", specialty: "Blockchain Developer", domain: "web3", image: "https://randomuser.me/api/portraits/men/22.jpg", isTyping: false },
+  { id: 6, name: "Raj Patel", specialty: "DeFi Specialist", domain: "web3", image: "https://randomuser.me/api/portraits/men/45.jpg", isTyping: false },
+  { id: 7, name: "Neha Gupta", specialty: "ML Engineer", domain: "ml", image: "https://randomuser.me/api/portraits/women/29.jpg", isTyping: false },
+  { id: 8, name: "David Wilson", specialty: "Data Scientist", domain: "ml", image: "https://randomuser.me/api/portraits/men/68.jpg", isTyping: false },
+  { id: 9, name: "Michael Johnson", specialty: "AWS Architect", domain: "cloud", image: "https://randomuser.me/api/portraits/men/75.jpg", isTyping: false },
+  { id: 10, name: "Sarah Williams", specialty: "Azure Specialist", domain: "cloud", image: "https://randomuser.me/api/portraits/women/68.jpg", isTyping: false },
+  { id: 11, name: "Sarah Williams", specialty: "IoT Engineer", domain: "iot", image: "https://randomuser.me/api/portraits/women/68.jpg", isTyping: false },
+  { id: 12, name: "Robert Chen", specialty: "Embedded Systems Engineer", domain: "iot", image: "https://randomuser.me/api/portraits/men/52.jpg", isTyping: false }
+];
+    
+    // Chat state with timestamps and user types
+    let messages = {
+      community: [
+        { 
+          id: 1, 
+          user: "Alex Chen", 
+          text: "Anyone interested in learning about network security? Looking for study partners.", 
+          timestamp: new Date(Date.now() - 3600000), 
+          isAnonymous: false,
+          type: "student"
+        },
+        { 
+          id: 2, 
+          user: "Anonymous Student", 
+          text: "How do I get started with React.js? Any good beginner resources?", 
+          timestamp: new Date(Date.now() - 1800000), 
+          isAnonymous: true,
+          type: "student"
+        },
+        { 
+          id: 3, 
+          user: "Adhitya K B", 
+          text: "For React beginners, I recommend starting with the official documentation and then moving to freeCodeCamp exercises.", 
+          timestamp: new Date(Date.now() - 900000), 
+          isAnonymous: false,
+          type: "mentor"
+        },
+        { 
+          id: 4, 
+          user: "Priya Sharma", 
+          text: "Has anyone worked with TensorFlow for image classification? I'm stuck on preprocessing my dataset.", 
+          timestamp: new Date(Date.now() - 600000), 
+          isAnonymous: false,
+          type: "student"
+        },
+        { 
+          id: 5, 
+          user: "Neha Gupta", 
+          text: "@Priya Sharma I can help with that. What specific issues are you facing with preprocessing?", 
+          timestamp: new Date(Date.now() - 300000), 
+          isAnonymous: false,
+          type: "mentor"
+        }
+      ],
+      cybersecurity: [
+        { 
+          id: 1, 
+          user: "Alex Chen", 
+          text: "What's the best way to start with ethical hacking? Should I focus on certifications first?", 
+          timestamp: new Date(Date.now() - 7200000), 
+          isAnonymous: false,
+          type: "student"
+        },
+        { 
+          id: 2, 
+          user: "Sana Mohammad Sahi", 
+          text: "I recommend starting with practical skills first. Try Hack The Box or TryHackMe platforms before pursuing certifications.", 
+          timestamp: new Date(Date.now() - 3600000), 
+          isAnonymous: false,
+          type: "mentor"
+        }
+      ],
+      mern: [
+        { 
+          id: 1, 
+          user: "Priya Sharma", 
+          text: "Can someone explain React hooks? I'm confused about when to use useEffect vs useState.", 
+          timestamp: new Date(Date.now() - 5400000), 
+          isAnonymous: false,
+          type: "student"
+        },
+        { 
+          id: 2, 
+          user: "Emily Chen", 
+          text: "useState is for managing component state, while useEffect handles side effects like data fetching or subscriptions.", 
+          timestamp: new Date(Date.now() - 4800000), 
+          isAnonymous: false,
+          type: "mentor"
+        }
+      ],
+      web3: [
+        { 
+          id: 1, 
+          user: "Raj Patel", 
+          text: "Anyone working on interesting DeFi projects? Looking to collaborate on something innovative.", 
+          timestamp: new Date(Date.now() - 3600000), 
+          isAnonymous: false,
+          type: "mentor"
+        },
+        { 
+          id: 2, 
+          user: "Anonymous Student", 
+          text: "How do I get started with Smart Contracts? Should I learn Solidity first?", 
+          timestamp: new Date(Date.now() - 900000), 
+          isAnonymous: true,
+          type: "student"
+        }
+      ],
+      ml: [
+        { 
+          id: 1, 
+          user: "Neha Gupta", 
+          text: "Recommendations for learning TensorFlow? Best courses or books for practical applications?", 
+          timestamp: new Date(Date.now() - 10800000), 
+          isAnonymous: false,
+          type: "student"
+        }
+      ],
+      cloud: [],
+      iot: []
+    };
+    
+    // AI Chatbot messages
+    let aiMessages = [
+      {
+        id: 1,
+        text: "Hello! I'm your Tech Mentor AI assistant. How can I help you with technology questions today?",
+        sender: "bot",
+        timestamp: new Date()
+      }
+    ];
+    
+    // App State
+    let state = {
+      currentUser: null,
+      currentView: 'home',
+      currentDomain: null,
+      filters: {
+        rating: 3.5,
+        experience: 3,
+        availableNow: true
+      },
+      sortBy: 'experience',
+      darkMode: false,
+      aiChatOpen: false
+    };
+
+    // 3D Model Variables
+    let scene, camera, renderer, model, controls;
+    let isRotating = false;
+    let rotationSpeed = 0.005;
+    
+    // DOM Elements
+    const dom = {
+      body: document.body,
+      darkModeToggle: document.querySelector('.dark-mode-toggle'),
+      navLinks: document.querySelector('.nav-links'),
+      menuToggle: document.querySelector('.menu-toggle'),
+      sections: {
+        home: document.getElementById('home'),
+        community: document.getElementById('community'),
+        resources: document.getElementById('resources'),
+        domain: document.getElementById('domain')
+      },
+      buttons: {
+        home: document.getElementById('home-link'),
+        domains: document.getElementById('domains-link'),
+        community: document.getElementById('community-link'),
+        resources: document.getElementById('resources-link'),
+        exploreDomains: document.getElementById('explore-domains'),
+        joinCommunity: document.getElementById('join-community'),
+        askAI: document.getElementById('ask-ai-btn'),
+        backToDomains: document.getElementById('back-to-domains'),
+        logout: document.getElementById('logout-btn')
+      },
+      filters: {
+        rating: document.getElementById('rating-filter'),
+        ratingValue: document.getElementById('rating-value'),
+        experience: document.getElementById('experience-filter'),
+        availableNow: document.getElementById('available-now'),
+        toggle: document.getElementById('filter-toggle'),
+        dropdown: document.getElementById('filter-dropdown')
+      },
+      search: {
+        input: document.getElementById('global-search'),
+        button: document.querySelector('.search-button')
+      },
+      aiChatbot: {
+        toggle: document.getElementById('ai-chatbot-toggle'),
+        container: document.getElementById('ai-chatbot-container'),
+        close: document.getElementById('ai-chatbot-close'),
+        messages: document.getElementById('ai-chatbot-messages'),
+        form: document.getElementById('ai-chatbot-form'),
+        input: document.querySelector('.ai-chatbot-input-field'),
+        typing: document.getElementById('ai-chatbot-typing')
+      },
+      modelControls: {
+        rotate: document.getElementById('rotate-model'),
+        zoomIn: document.getElementById('zoom-in-model'),
+        zoomOut: document.getElementById('zoom-out-model')
+      }
+    };
+    
+    // Initialize the app
+    function init() {
+      // Set up event listeners
+      setupEventListeners();
+      
+      // Initialize from URL hash
+      initFromHash();
+      
+      // Set up dark mode preference
+      initDarkMode();
+      
+      // Animate hero title words
+      animateHeroTitle();
+      
+      // Initialize filters
+      initFilters();
+      
+      // Render AI chatbot messages
+      renderAIChat();
+
+      // Initialize 3D model viewer
+      initModelViewer();
+    }
+    
+    function setupEventListeners() {
+      // Navigation
+      dom.buttons.home.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection('home');
+      });
+      
+      dom.buttons.domains.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection('home');
+      });
+      
+      dom.buttons.community.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection('community');
+      });
+      
+      dom.buttons.resources.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection('resources');
+      });
+      
+      dom.buttons.exploreDomains.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection('home');
+        window.scrollTo({
+          top: dom.sections.home.offsetTop - 80,
+          behavior: 'smooth'
+        });
+      });
+      
+      dom.buttons.joinCommunity.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection('community');
+      });
+      
+      dom.buttons.askAI.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleAIChat();
+      });
+      
+      dom.buttons.backToDomains.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection('home');
+      });
+
+      // Logout button
+      dom.buttons.logout.addEventListener('click', (e) => {
+        e.preventDefault();
+        showToast('You have been signed out');
+        // In a real app, you would handle actual logout logic here
+      });
+      
+      // Mobile menu toggle
+      dom.menuToggle.addEventListener('click', function() {
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !isExpanded);
+        dom.navLinks.classList.toggle('active');
+      });
+      
+      // Domain explore buttons
+      document.querySelectorAll('.explore-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const domainId = this.getAttribute('data-domain');
+          showDomain(domainId);
+        });
+      });
+      
+      // College dropdown
+      document.getElementById('college-dropdown')?.addEventListener('change', function() {
+        if (this.value) {
+          showToast(`Filtering for ${this.options[this.selectedIndex].text}`);
+        }
+      });
+      
+      // Search functionality
+      dom.search.button.addEventListener('click', handleSearch);
+      dom.search.input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          handleSearch();
+        }
+      });
+      
+      // Dark mode toggle
+      dom.darkModeToggle.addEventListener('click', toggleDarkMode);
+      
+      // AI Chatbot events
+      dom.aiChatbot.toggle.addEventListener('click', toggleAIChat);
+      dom.aiChatbot.close.addEventListener('click', toggleAIChat);
+      dom.aiChatbot.form.addEventListener('submit', handleAIChatSubmit);
+      
+      // Model controls
+      dom.modelControls.rotate.addEventListener('click', toggleModelRotation);
+      dom.modelControls.zoomIn.addEventListener('click', () => zoomModel(0.9));
+      dom.modelControls.zoomOut.addEventListener('click', () => zoomModel(1.1));
+      
+      // Handle back/forward navigation
+      window.addEventListener('popstate', debounce(initFromHash, 100));
+
+      // Resource filter listeners
+      const resourceDomainFilter = document.getElementById('resource-domain');
+      const resourceTypeFilter = document.getElementById('resource-type');
+
+      if (resourceDomainFilter) {
+        resourceDomainFilter.addEventListener('change', () => {
+          renderResources();
+        });
+      }
+
+      if (resourceTypeFilter) {
+        resourceTypeFilter.addEventListener('change', () => {
+          renderResources();
+        });
+      }
+    }
+
+    // Initialize 3D model viewer
+    function initModelViewer() {
+      const container = document.getElementById('model-viewer');
+      
+      // Create scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf0f0f0);
+      
+      // Create camera
+      camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+      camera.position.z = 5;
+      
+      // Create renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(container.clientWidth / container.clientHeight);
+      container.appendChild(renderer.domElement);
+      
+      // Add lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      scene.add(ambientLight);
+      
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight.position.set(1, 1, 1);
+      scene.add(directionalLight);
+      
+      // Add controls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.25;
+      
+      // Create a simple placeholder model (cube)
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const material = new THREE.MeshPhongMaterial({ 
+        color: 0x6e8efb,
+        specular: 0x111111,
+        shininess: 30
+      });
+      model = new THREE.Mesh(geometry, material);
+      scene.add(model);
+      
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      });
+      
+      // Start animation loop
+      animateModel();
+    }
+
+    function animateModel() {
+      requestAnimationFrame(animateModel);
+      
+      if (isRotating) {
+        model.rotation.y += rotationSpeed;
+      }
+      
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function toggleModelRotation() {
+      isRotating = !isRotating;
+      dom.modelControls.rotate.innerHTML = isRotating ? 
+        '<i class="fas fa-pause"></i>' : '<i class="fas fa-sync-alt"></i>';
+    }
+
+    function zoomModel(factor) {
+      camera.position.z *= factor;
+    }
+    
+    function initDarkMode() {
+      // Check for saved theme preference or use system preference
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+        enableDarkMode();
+      } else {
+        disableDarkMode();
+      }
+    }
+    
+    function toggleDarkMode() {
+      if (state.darkMode) {
+        disableDarkMode();
+      } else {
+        enableDarkMode();
+      }
+    }
+    
+    function enableDarkMode() {
+      state.darkMode = true;
+      dom.body.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+      
+      // Update 3D model scene background
+      if (scene) {
+        scene.background = new THREE.Color(0x1a1a1a);
+      }
+    }
+    
+    function disableDarkMode() {
+      state.darkMode = false;
+      dom.body.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'light');
+      
+      // Update 3D model scene background
+      if (scene) {
+        scene.background = new THREE.Color(0xf0f0f0);
+      }
+    }
+    
+    function initFilters() {
+      // Rating filter
+      dom.filters.rating.addEventListener('input', function() {
+        const value = parseFloat(this.value);
+        dom.filters.ratingValue.textContent = `${value.toFixed(1)}+`;
+        state.filters.rating = value;
+        if (state.currentDomain) {
+          renderMentors(state.currentDomain);
+        }
+      });
+      
+      // Experience filter
+      dom.filters.experience.addEventListener('change', function() {
+        state.filters.experience = parseInt(this.value);
+        if (state.currentDomain) {
+          renderMentors(state.currentDomain);
+        }
+      });
+      
+      // Availability filter
+      dom.filters.availableNow.addEventListener('change', function() {
+        state.filters.availableNow = this.checked;
+        if (state.currentDomain) {
+          renderMentors(state.currentDomain);
+        }
+      });
+      
+      // Filter dropdown hover
+      dom.filters.toggle.addEventListener('mouseenter', () => {
+        dom.filters.dropdown.style.opacity = '1';
+        dom.filters.dropdown.style.visibility = 'visible';
+        dom.filters.dropdown.style.transform = 'translateY(0)';
+      });
+      
+      dom.filters.dropdown.addEventListener('mouseleave', () => {
+        dom.filters.dropdown.style.opacity = '0';
+        dom.filters.dropdown.style.visibility = 'hidden';
+        dom.filters.dropdown.style.transform = 'translateY(10px)';
+      });
+    }
+    
+    function animateHeroTitle() {
+      const titleWords = document.querySelectorAll('.title-word');
+      titleWords.forEach((word, index) => {
+        word.style.animationDelay = `${index * 0.1}s`;
+      });
+    }
+    
+    function handleSearch() {
+      const query = dom.search.input.value.trim();
+      if (query) {
+        showToast(`Searching for "${query}"`);
+        // In a real app, you would implement actual search functionality
+        console.log('Search query:', query);
+      }
+    }
+    
+    // Navigation Functions
+    function showSection(sectionId) {
+      // Hide all sections first
+      Object.values(dom.sections).forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Show the requested section
+      const section = dom.sections[sectionId];
+      if (section) {
+        section.classList.add('active');
+        
+        // Render appropriate content
+        if (sectionId === 'community') {
+          // Always render content first
+          renderChat('community', 'community-chat');
+          renderOnlineMentors();
+          
+          // Then scroll to title after content is rendered
+          requestAnimationFrame(() => {
+            const communityHeader = document.getElementById('community-heading');
+            if (communityHeader) {
+              window.scrollTo({
+                top: communityHeader.offsetTop - 80,
+                behavior: 'smooth'
+              });
+            }
+          });
+        } else if (sectionId === 'resources') {
+          // Render resources first
+          renderResources();
+          
+          // Then scroll to resources title
+          requestAnimationFrame(() => {
+            const resourcesHeader = document.getElementById('resources-heading');
+            if (resourcesHeader) {
+              window.scrollTo({
+                top: resourcesHeader.offsetTop - 80,
+                behavior: 'smooth'
+              });
+            }
+          });
+        } else if (sectionId === 'domain') {
+          // Domain section scroll is handled in showDomain function
+        } else if (sectionId === 'home') {
+          document.getElementById('college-dropdown').value = '';
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }
+      }
+      
+      // Close mobile menu if open
+      dom.navLinks?.classList.remove('active');
+      dom.menuToggle?.setAttribute('aria-expanded', 'false');
+      
+      // Update URL without triggering navigation
+      if (history.pushState) {
+        const newUrl = sectionId === "home" ? "#" : `#${sectionId}`;
+        history.pushState(null, null, newUrl);
+      }
+      
+      // Update current view in state
+      state.currentView = sectionId;
+      if (sectionId !== 'domain') {
+        state.currentDomain = null;
+      }
+    }
+    
+    function showDomain(domainId) {
+      const domain = DOMAINS[domainId];
+      if (!domain) {
+        showSection('home');
+        return;
+      }
+      
+      showLoading(true);
+      
+      setTimeout(() => {
+        showSection('domain');
+        
+        // Set domain title and description
+        document.getElementById("domain-title").textContent = `${domain.name} Mentors`;
+        document.getElementById("domain-description").textContent = domain.description;
+        
+        // Render mentors first
+        renderMentors(domainId);
+        
+        // Initialize quiz section
+        initQuizSection(domainId);
+        
+        // Render chat last
+        renderChat(domainId, "domain-chat");
+        
+        // Scroll to top of domain section
+        window.scrollTo({
+          top: document.getElementById('domain').offsetTop - 80,
+          behavior: 'smooth'
+        });
+        
+        showLoading(false);
+        
+        if (history.pushState) {
+          history.pushState(null, null, `#domain/${domainId}`);
+        }
+        
+        state.currentDomain = domainId;
+      }, 300);
+    }
+    
+    function initQuizSection(domainId) {
+      const quizSection = document.getElementById('quiz-section');
+      quizSection.style.display = 'block';
+      
+      const levelsContainer = document.getElementById('quiz-levels');
+      levelsContainer.innerHTML = '';
+      
+      const levels = [
+        { id: 'beginner', name: 'Beginner', description: 'Basic concepts and fundamentals' },
+        { id: 'intermediate', name: 'Intermediate', description: 'Practical applications and scenarios' },
+        { id: 'advanced', name: 'Advanced', description: 'Complex topics and expert-level challenges' }
+      ];
+      
+      levels.forEach(level => {
+        const levelCard = document.createElement('div');
+        levelCard.className = 'quiz-level-card';
+        levelCard.innerHTML = `
+          <h4>${level.name}</h4>
+          <p>${level.description}</p>
+          <div class="quiz-progress-bar">
+            <div class="quiz-progress-fill" style="width: ${Math.floor(Math.random() * 100)}%"></div>
+          </div>
+        `;
+        levelCard.addEventListener('click', () => startQuiz(domainId, level.id));
+        levelsContainer.appendChild(levelCard);
+      });
+      
+      document.getElementById('start-quiz-btn').addEventListener('click', () => {
+        startQuiz(domainId, 'adaptive');
+      });
+    }
+    
+    function startQuiz(domainId, level) {
+      localStorage.setItem('currentQuizParams', JSON.stringify({
+        domain: domainId,
+        level: level,
+        returnUrl: window.location.href
+      }));
+      window.open('quiz.html', '_blank');
+    }
+    
+    function initFromHash() {
+      const hash = window.location.hash.slice(1);
+      
+      if (hash === "community") {
+        showSection("community");
+      } 
+      else if (hash.startsWith("domain/")) {
+        const domainId = hash.split("/")[1];
+        showDomain(domainId);
+      } 
+      else if (hash === "resources") {
+        showSection("resources");
+      }
+      else {
+        showSection("home");
+      }
+    }
+    
+    // Chat Functions
+    function renderChat(domainId, containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      
+      const isCommunity = containerId === 'community-chat';
+      const domainMessages = isCommunity ? messages.community : messages[domainId] || [];
+      const domainInfo = isCommunity ? { 
+        name: "Community", 
+        description: "Discuss with students and mentors across all domains" 
+      } : DOMAINS[domainId];
+      
+      // Filter online mentors for this domain
+      const currentDomainMentors = isCommunity 
+        ? onlineMentors 
+        : onlineMentors.filter(mentor => mentor.domain === domainId);
+      
+      const messagesContainer = container.querySelector('.messages-container') || document.createElement('div');
+      messagesContainer.className = 'messages-container';
+      messagesContainer.innerHTML = domainMessages.map(msg => `
+        <div class="message ${msg.type === 'mentor' ? 'mentor' : 'user'} ${msg.isAnonymous ? "anonymous" : ""}">
+          <div class="message-header">
+            <span class="user-name">${msg.user}</span>
+            <span class="timestamp">${formatDate(msg.timestamp)}</span>
+          </div>
+          <p class="message-text">${msg.text}</p>
+        </div>
+      `).join("");
+      
+      // Auto-scroll to bottom
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      
+      // Add typing indicators
+      const typingMentors = currentDomainMentors.filter(m => m.isTyping);
+      const typingIndicator = container.querySelector('.typing-indicator') || document.createElement('div');
+      typingIndicator.className = 'typing-indicator';
+      typingIndicator.id = `${domainId}-typing`;
+      
+      if (typingMentors.length > 0) {
+        const names = typingMentors.map(m => m.name).join(', ');
+        typingIndicator.textContent = `${names} ${typingMentors.length > 1 ? 'are' : 'is'} typing...`;
+      } else {
+        typingIndicator.textContent = '';
+      }
+      
+      // Add form
+      const formId = `${domainId}-form`;
+      let form = document.getElementById(formId);
+      
+      if (!form) {
+        form = document.createElement('form');
+        form.id = formId;
+        form.className = 'message-form';
+        form.innerHTML = `
+          <div class="input-group">
+            <input type="text" placeholder="Ask a question about ${domainInfo.name}..." class="message-input" required>
+            <div class="message-actions">
+              <button type="button" class="emoji-button" aria-label="Add emoji">
+                <i class="far fa-smile"></i>
+              </button>
+              <button type="submit" class="send-button">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+          <div class="message-options">
+            <label class="option-toggle">
+              <input type="checkbox" id="anonymous-${containerId}">
+              <span class="toggle-slider"></span>
+              <span>Post Anonymously</span>
+            </label>
+          </div>
+        `;
+        
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          sendMessage(e, domainId, containerId);
+        });
+      }
+      
+      // Clear and rebuild container
+      container.innerHTML = '';
+      
+      // Add header
+      const header = document.createElement('div');
+
+      container.appendChild(header);
+      
+      // Add messages container
+      container.appendChild(messagesContainer);
+      
+      // Add typing indicator
+      container.appendChild(typingIndicator);
+      
+      // Add form
+      container.appendChild(form);
+      
+      // Focus on input
+      const input = form.querySelector('.message-input');
+      input?.focus();
+      
+      // Add help button event
+      document.getElementById(`${domainId}-help`)?.addEventListener('click', () => {
+        showToast(`Help for ${domainInfo.name} chat`);
+      });
+    }
+    
+    function renderOnlineMentors() {
+      const mentorsList = document.querySelector('.mentors-list');
+      if (!mentorsList) return;
+      
+      mentorsList.innerHTML = onlineMentors.map(mentor => `
+        <div class="mentor-item">
+          <img src="${mentor.image}" alt="${mentor.name}" class="mentor-avatar">
+          <div class="mentor-info">
+            <div class="mentor-name">${mentor.name}</div>
+            <div class="mentor-specialty">${mentor.specialty}</div>
+          </div>
+          <div class="online-status"></div>
+        </div>
+      `).join('');
+      
+      // Add click events to mentor items
+      document.querySelectorAll('.mentor-item').forEach(item => {
+        item.addEventListener('click', function() {
+          const mentorName = this.querySelector('.mentor-name').textContent;
+          showToast(`Opening chat with ${mentorName}`);
+        });
+      });
+    }
+
+    function sendMessage(e, domainId, containerId) {
+      e.preventDefault();
+      const input = e.target.querySelector('.message-input');
+      const messageText = input.value.trim();
+      const isAnonymous = e.target.querySelector(`#anonymous-${containerId}`).checked;
+      
+      if (!messageText) return;
+      
+      // Create new message object
+      const newMessage = {
+        id: Date.now(),
+        user: isAnonymous ? 'Anonymous Student' : (state.currentUser?.name || 'Guest'),
+        text: messageText,
+        timestamp: new Date(),
+        isAnonymous: isAnonymous,
+        type: 'student'
+      };
+      
+      // Add to messages array
+      if (containerId === 'community-chat') {
+        messages.community.push(newMessage);
+      } else {
+        if (!messages[domainId]) messages[domainId] = [];
+        messages[domainId].push(newMessage);
+      }
+      
+      // Clear input
+      input.value = '';
+      
+      // Re-render chat
+      renderChat(domainId, containerId);
+      
+      // Simulate mentor response (in a real app, this would be from a real mentor)
+      if (Math.random() > 0.5) {
+        simulateMentorResponse(domainId, containerId);
+      }
+    }
+
+    function simulateMentorResponse(domainId, containerId) {
+      const domainMentors = onlineMentors.filter(m => 
+        containerId === 'community-chat' || m.domain === domainId
+      );
+      
+      if (domainMentors.length === 0) return;
+      
+      const randomMentor = domainMentors[Math.floor(Math.random() * domainMentors.length)];
+      const mentor = DOMAINS[domainId]?.mentors.find(m => m.name === randomMentor.name);
+      
+      if (!mentor) return;
+      
+      // Set mentor as typing
+      randomMentor.isTyping = true;
+      renderChat(domainId, containerId);
+      
+      // Generate response after delay
+      setTimeout(() => {
+        randomMentor.isTyping = false;
+        
+        const responses = [
+          `That's a great question! Have you checked the documentation for this?`,
+          `I'd be happy to help with that. Could you provide more details?`,
+          `In my experience, the best approach is to...`,
+          `That's a common challenge. Here's how I usually handle it...`,
+          `Let me point you to some resources that might help...`
+        ];
+        
+        const responseText = responses[Math.floor(Math.random() * responses.length)];
+        
+        const responseMessage = {
+          id: Date.now(),
+          user: mentor.name,
+          text: responseText,
+          timestamp: new Date(),
+          isAnonymous: false,
+          type: 'mentor'
+        };
+        
+        if (containerId === 'community-chat') {
+          messages.community.push(responseMessage);
+        } else {
+          messages[domainId].push(responseMessage);
+        }
+        
+        renderChat(domainId, containerId);
+      }, 2000 + Math.random() * 3000);
+    }
+
+    // Mentor Functions
+    function renderMentors(domainId) {
+      const mentors = DOMAINS[domainId]?.mentors || [];
+      const mentorsGrid = document.querySelector('.mentors-grid');
+      
+      if (!mentorsGrid) return;
+      
+      // Apply filters
+      let filteredMentors = mentors.filter(mentor => {
+        return mentor.rating >= state.filters.rating &&
+               mentor.experience >= state.filters.experience &&
+               (!state.filters.availableNow || mentor.isAvailable);
+      });
+      
+      // Apply sorting
+      filteredMentors.sort((a, b) => {
+        if (state.sortBy === 'rating') {
+          return b.rating - a.rating;
+        } else if (state.sortBy === 'availability') {
+          return (b.isAvailable ? 1 : 0) - (a.isAvailable ? 1 : 0);
+        } else {
+          // Default: experience
+          return b.experience - a.experience;
+        }
+      });
+      
+      mentorsGrid.innerHTML = filteredMentors.map(mentor => `
+        <div class="mentor-card" role="listitem">
+          <div class="mentor-header">
+            <img src="${mentor.image}" alt="${mentor.name}" class="mentor-avatar">
+            <div class="mentor-details">
+              <h3 class="mentor-name">${mentor.name}</h3>
+              <p class="mentor-specialty">${mentor.expertise}</p>
+              <div class="mentor-rating">
+                ${Array(Math.floor(mentor.rating)).fill('<i class="fas fa-star"></i>').join('')}
+                ${mentor.rating % 1 >= 0.5 ? '<i class="fas fa-star-half-alt"></i>' : ''}
+                <span>${mentor.rating.toFixed(1)} (${Math.floor(Math.random() * 50) + 10} reviews)</span>
+              </div>
+            </div>
+          </div>
+          <p class="mentor-bio">${mentor.bio}</p>
+          <div class="mentor-skills">
+            ${mentor.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+          </div>
+          <div class="mentor-availability">
+            <i class="fas fa-${mentor.isAvailable ? 'check-circle' : 'clock'}"></i>
+            <span>${mentor.isAvailable ? 'Available now' : mentor.availability}</span>
+          </div>
+          <div class="mentor-actions">
+            <button class="contact-btn" data-mentor-id="${mentor.id}">
+              <i class="fas fa-envelope"></i>
+              <span>Contact</span>
+            </button>
+            <button class="schedule-btn" data-mentor-id="${mentor.id}">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Schedule</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+      
+      // Add event listeners to mentor action buttons
+      document.querySelectorAll('.contact-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const mentorId = this.getAttribute('data-mentor-id');
+          const mentor = DOMAINS[domainId].mentors.find(m => m.id == mentorId);
+          showToast(`Contacting ${mentor.name}`);
+        });
+      });
+      
+      document.querySelectorAll('.schedule-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const mentorId = this.getAttribute('data-mentor-id');
+          const mentor = DOMAINS[domainId].mentors.find(m => m.id == mentorId);
+          showToast(`Scheduling with ${mentor.name}`);
+        });
+      });
+    }
+
+    // Resource Functions
+    function renderResources() {
+      const resourcesGrid = document.querySelector('.resources-grid');
+      if (!resourcesGrid) return;
+      
+      const domainFilter = document.getElementById('resource-domain')?.value || 'all';
+      const typeFilter = document.getElementById('resource-type')?.value || 'all';
+      
+      // Flatten all resources with their domain info
+      let allResources = [];
+      Object.entries(DOMAINS).forEach(([domainId, domain]) => {
+        domain.resources.forEach(resource => {
+          allResources.push({
+            ...resource,
+            domain: domainId,
+            domainName: domain.name,
+            domainColor: domain.color
+          });
+        });
+      });
+      
+      // Apply filters
+      let filteredResources = allResources.filter(resource => {
+        const domainMatch = domainFilter === 'all' || resource.domain === domainFilter;
+        const typeMatch = typeFilter === 'all' || resource.type === typeFilter;
+        return domainMatch && typeMatch;
+      });
+      
+      resourcesGrid.innerHTML = filteredResources.map(resource => `
+        <div class="resource-card">
+          <div class="resource-image" style="background-color: ${resource.domainColor}20; color: ${resource.domainColor}">
+            <i class="fas fa-${getResourceIcon(resource.type)}"></i>
+          </div>
+          <div class="resource-content">
+            <span class="resource-type" style="background-color: ${resource.domainColor}20; color: ${resource.domainColor}">
+              ${resource.domainName}
+            </span>
+            <h3 class="resource-title">${resource.title}</h3>
+            <p class="resource-description">${resource.description}</p>
+            <div class="resource-meta">
+              <span>Recommended by ${resource.recommendedBy}</span>
+              <span>${resource.type.charAt(0).toUpperCase() + resource.type.slice(1)}</span>
+            </div>
+            <div class="resource-actions">
+              <a href="${resource.url}" target="_blank" class="resource-link">
+                <span>View Resource</span>
+                <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getResourceIcon(type) {
+      const icons = {
+        book: 'book',
+        course: 'graduation-cap',
+        tutorial: 'laptop-code',
+        article: 'newspaper',
+        video: 'video'
+      };
+      return icons[type] || 'link';
+    }
+
+    // AI Chatbot Functions
+    function toggleAIChat() {
+      state.aiChatOpen = !state.aiChatOpen;
+      if (state.aiChatOpen) {
+        dom.aiChatbot.container.classList.add('active');
+        dom.aiChatbot.input.focus();
+      } else {
+        dom.aiChatbot.container.classList.remove('active');
+      }
+    }
+
+    function renderAIChat() {
+      const messagesContainer = dom.aiChatbot.messages;
+      messagesContainer.innerHTML = aiMessages.map(msg => `
+        <div class="ai-message">
+          <div class="ai-message-${msg.sender}">${msg.text}</div>
+          <div class="ai-message-time">${formatDate(msg.timestamp)}</div>
+        </div>
+      `).join('');
+      
+      // Scroll to bottom
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function handleAIChatSubmit(e) {
+      e.preventDefault();
+      const messageText = dom.aiChatbot.input.value.trim();
+      
+      // Don't send empty messages
+      if (!messageText) return;
+      
+      // Add user message immediately
+      const userMessage = {
+        id: Date.now(),
+        text: messageText,
+        sender: "user",
+        timestamp: new Date()
+      };
+      aiMessages.push(userMessage);
+      renderAIChat();
+      
+      // Clear input and show typing indicator
+      dom.aiChatbot.input.value = '';
+      dom.aiChatbot.typing.classList.add('active');
+      
+      // Call Flask backend
+      fetch('http://localhost:5000/api/ask-ai', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: messageText })
+      })
+      .then(async response => {
+        // First check if response is OK (status 200-299)
+        if (!response.ok) {
+          // Try to get error details from response
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || `Server responded with status ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Check for error in successful response
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        
+        // Add AI response
+        const aiMessage = {
+          id: Date.now(),
+          text: data.response,
+          sender: "bot",
+          timestamp: new Date()
+        };
+        aiMessages.push(aiMessage);
+      })
+      .catch(error => {
+        console.error('Chat Error:', error);
+        
+        // More specific error messages
+        let errorMessage = "Sorry, I'm having trouble connecting to the AI service.";
+        
+        if (error.message.includes('Failed to fetch')) {
+          errorMessage = "Couldn't connect to the server. Please check:";
+          errorMessage += "\n1. Is the Flask backend running?";
+          errorMessage += "\n2. Are you using the correct URL?";
+          errorMessage += "\n3. Is port 5000 accessible?";
+        } else if (error.message.includes('Server responded')) {
+          errorMessage = `Server error: ${error.message}`;
+        } else if (error.message) {
+          errorMessage = `Error: ${error.message}`;
+        }
+        
+        const aiMessage = {
+          id: Date.now(),
+          text: errorMessage,
+          sender: "bot",
+          timestamp: new Date()
+        };
+        aiMessages.push(aiMessage);
+      })
+      .finally(() => {
+        // Always remove typing indicator and re-render
+        dom.aiChatbot.typing.classList.remove('active');
+        renderAIChat();
+      });
+    }
+
+    // Utility Functions
+    function debounce(func, wait, immediate) {
+      let timeout;
+      return function() {
+        const context = this, args = arguments;
+        const later = function() {
+          timeout = null;
+          if (!immediate) func.apply(context, args);
+        };
+        const callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+      };
+    }
+    
+    function formatDate(date) {
+      return date.toLocaleTimeString([], { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true
+      });
+    }
+    
+    function showToast(message, duration = 3000) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, duration);
+    }
+    
+    function showLoading(show) {
+      const spinner = document.getElementById('loading-spinner');
+      if (show) {
+        spinner.classList.add('active');
+      } else {
+        spinner.classList.remove('active');
+      }
+    }
+
+    // Initialize the app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      init();
+      
+      // Simulate some mentor typing in community chat
+      setTimeout(() => {
+        const typingMentor = onlineMentors.find(m => m.id === 3);
+        if (typingMentor) typingMentor.isTyping = true;
+        renderChat('community', 'community-chat');
+      }, 5000);
+      
+      // Stop typing after delay
+      setTimeout(() => {
+        const typingMentor = onlineMentors.find(m => m.id === 3);
+        if (typingMentor) typingMentor.isTyping = false;
+        renderChat('community', 'community-chat');
+      }, 8000);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,2470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechMentor - Interactive Learning Paths</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #e74c3c;
+      --light-color: #ecf0f1;
+      --dark-color: #1a1a1a;
+      --text-color: #333;
+      --text-light: #ecf0f1;
+      --bg-light: #ffffff;
+      --bg-dark: #1a1a1a;
+      --success-color: #27ae60;
+      --danger-color: #e74c3c;
+      --warning-color: #f39c12;
+      --info-color: #3498db;
+      --border-radius: 12px;
+      --box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --primary-gradient: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+      --dark-gradient: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%);
+      --card-hover-transform: translateY(-5px) scale(1.02);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--bg-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s ease;
+    }
+
+    body.dark-mode {
+      background: var(--dark-gradient);
+      color: var(--text-light);
+    }
+
+    /* Header Styles */
+    header {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: var(--box-shadow);
+      position: relative;
+      z-index: 10;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .logo i {
+      font-size: 1.8rem;
+    }
+
+    /* Main Content Styles */
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Footer Styles */
+    footer {
+      padding: 1.5rem;
+      text-align: center;
+      background: var(--dark-gradient);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--accent-color);
+    }
+
+    /* Screen Management */
+    .screen {
+      display: none;
+      width: 100%;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    /* Button Styles */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    button {
+      cursor: pointer;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      font-weight: 500;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    button:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .primary-btn {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .primary-btn:hover:not(:disabled) {
+      background-color: #1a2635;
+    }
+
+    .secondary-btn {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    .secondary-btn:hover:not(:disabled) {
+      background-color: #2980b9;
+    }
+
+    .accent-btn {
+      background-color: var(--accent-color);
+      color: white;
+    }
+
+    .accent-btn:hover:not(:disabled) {
+      background-color: #c0392b;
+    }
+
+    .outline-btn {
+      background-color: transparent;
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .outline-btn:hover:not(:disabled) {
+      background-color: rgba(44, 62, 80, 0.1);
+    }
+
+    body.dark-mode .outline-btn {
+      border-color: var(--secondary-color);
+      color: var(--secondary-color);
+    }
+
+    body.dark-mode .outline-btn:hover:not(:disabled) {
+      background-color: rgba(52, 152, 219, 0.1);
+    }
+
+    .nav-btn {
+      background-color: var(--light-color);
+      border: 1px solid #ddd;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background-color: #d5dbdb;
+    }
+
+    body.dark-mode .nav-btn {
+      background-color: #2d2d2d;
+      border-color: #444;
+      color: var(--text-light);
+    }
+
+    body.dark-mode .nav-btn:hover:not(:disabled) {
+      background-color: #3d3d3d;
+    }
+
+    /* Back Button */
+    .back-button {
+      color: var(--primary-color);
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      padding: 0.5rem 0;
+    }
+
+    .back-button:hover {
+      text-decoration: underline;
+    }
+
+    body.dark-mode .back-button {
+      color: var(--secondary-color);
+    }
+
+    /* Grid Layouts */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    /* Path Cards */
+    .path-card {
+      background: var(--bg-light);
+      border-radius: var(--border-radius);
+      padding: 1.75rem 1.5rem;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      height: 100%;
+      will-change: transform;
+      position: relative;
+    }
+
+    .path-card:hover {
+      transform: var(--card-hover-transform);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .path-card h3 {
+      color: var(--primary-color);
+      margin: 0;
+      font-size: 1.25rem;
+    }
+
+    .path-icon {
+      font-size: 2.5rem;
+      color: var(--accent-color);
+    }
+
+    .path-description {
+      color: var(--text-color);
+      font-size: 0.9rem;
+      flex-grow: 1;
+    }
+
+    body.dark-mode .path-card {
+      background: var(--bg-dark);
+      border-color: #444;
+    }
+
+    body.dark-mode .path-description {
+      color: #b0b0b0;
+    }
+
+    /* Locked State */
+    .locked-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: var(--border-radius);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .locked-overlay i {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Progress Indicator */
+    .progress-indicator {
+      width: 100%;
+      height: 6px;
+      background-color: #e9ecef;
+      border-radius: 3px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+
+    body.dark-mode .progress-indicator {
+      background-color: #3d3d3d;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--success-color);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-left: 0.5rem;
+    }
+
+    .badge-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .badge-secondary {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    .badge-accent {
+      background-color: var(--accent-color);
+      color: white;
+    }
+
+    .badge-success {
+      background-color: var(--success-color);
+      color: white;
+    }
+
+    .badge-warning {
+      background-color: var(--warning-color);
+      color: black;
+    }
+
+    .badge-danger {
+      background-color: var(--danger-color);
+      color: white;
+    }
+
+    .badge-info {
+      background-color: var(--info-color);
+      color: white;
+    }
+
+    /* Level Selection */
+    .level-card {
+      background: var(--bg-light);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      cursor: pointer;
+      text-align: center;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
+
+    .level-card:hover {
+      transform: var(--card-hover-transform);
+    }
+
+    .level-card h3 {
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+
+    .level-card p {
+      color: var(--text-color);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    body.dark-mode .level-card {
+      background: var(--bg-dark);
+      border-color: #444;
+    }
+
+    body.dark-mode .level-card h3 {
+      color: var(--secondary-color);
+    }
+
+    body.dark-mode .level-card p {
+      color: #b0b0b0;
+    }
+
+    /* Topic Selection */
+    .topic-card {
+      background: var(--bg-light);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      cursor: pointer;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
+
+    .topic-card:hover {
+      transform: var(--card-hover-transform);
+    }
+
+    .topic-card h3 {
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+
+    .topic-card p {
+      color: var(--text-color);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    body.dark-mode .topic-card {
+      background: var(--bg-dark);
+      border-color: #444;
+    }
+
+    body.dark-mode .topic-card h3 {
+      color: var(--secondary-color);
+    }
+
+    body.dark-mode .topic-card p {
+      color: #b0b0b0;
+    }
+
+    .topic-status {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .topic-status.completed {
+      color: var(--success-color);
+    }
+
+    .topic-status.locked {
+      color: var(--warning-color);
+    }
+
+    /* Quiz Styles */
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .quiz-title {
+      flex-grow: 1;
+    }
+
+    .progress-info {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .progress {
+      font-weight: bold;
+      color: var(--secondary-color);
+      white-space: nowrap;
+    }
+
+    #timer {
+      background-color: var(--dark-color);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    #timer.warning {
+      background-color: var(--warning-color);
+      color: black;
+    }
+
+    #timer.danger {
+      background-color: var(--danger-color);
+    }
+
+    #question-container {
+      background: var(--bg-light);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      margin-bottom: 2rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    body.dark-mode #question-container {
+      background: var(--bg-dark);
+      border-color: #444;
+    }
+
+    #question-text {
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--text-color);
+    }
+
+    body.dark-mode #question-text {
+      color: var(--text-light);
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 1rem 1.25rem;
+      text-align: left;
+      background-color: var(--light-color);
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      color: var(--text-color);
+    }
+
+    .option-btn:hover:not(.selected) {
+      background-color: #d5dbdb;
+      border-color: #ccc;
+    }
+
+    .option-btn.selected {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+      animation: pulse 0.5s ease;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    .option-btn.correct {
+      background-color: var(--success-color);
+      border-color: var(--success-color);
+      color: white;
+    }
+
+    .option-btn.incorrect {
+      background-color: var(--danger-color);
+      border-color: var(--danger-color);
+      color: white;
+    }
+
+    body.dark-mode .option-btn:not(.selected) {
+      background-color: #3d3d3d;
+      border-color: #444;
+      color: var(--text-light);
+    }
+
+    body.dark-mode .option-btn:hover:not(.selected) {
+      background-color: #4d4d4d;
+    }
+
+    /* Question Navigation */
+    .question-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .question-nav-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--light-color);
+      border: 1px solid #ddd;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-color);
+    }
+
+    .question-nav-btn.answered {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .question-nav-btn.marked {
+      background-color: var(--warning-color);
+      color: black;
+      border-color: var(--warning-color);
+    }
+
+    .question-nav-btn.current {
+      border: 2px solid var(--accent-color);
+      transform: scale(1.1);
+    }
+
+    .question-nav-btn:hover {
+      transform: scale(1.1);
+    }
+
+    body.dark-mode .question-nav-btn {
+      background-color: #3d3d3d;
+      border-color: #444;
+      color: var(--text-light);
+    }
+
+    /* Quiz Navigation */
+    .quiz-navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .quiz-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* Quiz Controls */
+    .quiz-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* Bookmark Button */
+    .bookmark-btn {
+      background: none;
+      border: none;
+      color: var(--warning-color);
+      cursor: pointer;
+      font-size: 1.25rem;
+      transition: var(--transition);
+    }
+
+    .bookmark-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .bookmark-btn.bookmarked {
+      color: var(--warning-color);
+    }
+
+    /* Results Styles */
+    .score-summary {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin: 2rem 0;
+      background: var(--bg-light);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      flex-wrap: wrap;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    body.dark-mode .score-summary {
+      background: var(--bg-dark);
+      border-color: #444;
+    }
+
+    .score-card {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 2rem;
+      border-radius: 50%;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+      animation: bounceIn 0.75s ease;
+    }
+
+    .score-value {
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+
+    .score-label {
+      font-size: 1.2rem;
+    }
+
+    .score-details {
+      flex-grow: 1;
+    }
+
+    .score-details p {
+      margin-bottom: 0.5rem;
+      color: var(--text-color);
+    }
+
+    .score-details strong {
+      color: var(--primary-color);
+    }
+
+    body.dark-mode .score-details p {
+      color: var(--text-light);
+    }
+
+    body.dark-mode .score-details strong {
+      color: var(--secondary-color);
+    }
+
+    /* Chart Container */
+    .chart-container {
+      background: var(--bg-light);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      margin: 2rem 0;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    body.dark-mode .chart-container {
+      background: var(--bg-dark);
+      border-color: #444;
+    }
+
+    /* Question Review */
+    .review-item {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background: var(--bg-light);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .review-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .review-item.correct {
+      border-left: 4px solid var(--success-color);
+    }
+
+    .review-item.incorrect {
+      border-left: 4px solid var(--danger-color);
+    }
+
+    body.dark-mode .review-item {
+      background: var(--bg-dark);
+      border-color: #444;
+    }
+
+    .review-question {
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+      color: var(--text-color);
+    }
+
+    body.dark-mode .review-question {
+      color: var(--text-light);
+    }
+
+    .review-answer {
+      margin: 0.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-color);
+    }
+
+    .review-answer.correct {
+      color: var(--success-color);
+      font-weight: bold;
+    }
+
+    .review-answer.incorrect {
+      color: var(--danger-color);
+    }
+
+    .review-explanation {
+      color: var(--text-color);
+      margin-top: 0.75rem;
+      padding: 0.75rem;
+      background-color: var(--light-color);
+      border-radius: var(--border-radius);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    body.dark-mode .review-explanation {
+      background-color: #3d3d3d;
+      color: #b0b0b0;
+    }
+
+    /* Progress Screen */
+    .progress-container {
+      width: 100%;
+    }
+
+    #progress-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: var(--bg-light);
+      box-shadow: var(--box-shadow);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    body.dark-mode #progress-table {
+      background: var(--bg-dark);
+      border-color: #444;
+    }
+
+    #progress-table th, #progress-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      color: var(--text-color);
+    }
+
+    body.dark-mode #progress-table th,
+    body.dark-mode #progress-table td {
+      border-bottom-color: #444;
+      color: var(--text-light);
+    }
+
+    #progress-table th {
+      background-color: var(--primary-color);
+      color: white;
+      position: sticky;
+      top: 0;
+    }
+
+    #progress-table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    body.dark-mode #progress-table tr:nth-child(even) {
+      background-color: #2d2d2d;
+    }
+
+    #progress-table tr:hover {
+      background-color: #e9ecef;
+    }
+
+    body.dark-mode #progress-table tr:hover {
+      background-color: #3d3d3d;
+    }
+
+    .progress-container-cell {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .progress-bar {
+      height: 20px;
+      width: 100px;
+      background-color: #e9ecef;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    body.dark-mode .progress-bar {
+      background-color: #3d3d3d;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--primary-color);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    /* Confirmation Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-light);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      width: 100%;
+      max-width: 500px;
+      padding: 2rem;
+      position: relative;
+      animation: slideUp 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    body.dark-mode .modal-content {
+      background: var(--bg-dark);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+    }
+
+    body.dark-mode .modal-close {
+      color: #b0b0b0;
+    }
+
+    .modal-close:hover {
+      color: var(--danger-color);
+    }
+
+    .modal-title {
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: var(--text-color);
+    }
+
+    body.dark-mode .modal-title {
+      color: var(--text-light);
+    }
+
+    .confirmation-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid var(--primary-color);
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Error Message */
+    .error-message {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2rem;
+      background-color: #ffeeee;
+      border-radius: var(--border-radius);
+      border-left: 4px solid var(--danger-color);
+      color: var(--text-color);
+    }
+
+    body.dark-mode .error-message {
+      background-color: #3d2d2d;
+      color: var(--text-light);
+    }
+
+    .error-message button {
+      margin-top: 1rem;
+      background-color: var(--danger-color);
+      color: white;
+    }
+
+    /* Utility Classes */
+    .hidden {
+      display: none !important;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .mt-2 {
+      margin-top: 0.5rem;
+    }
+
+    .mt-4 {
+      margin-top: 1rem;
+    }
+
+    .mt-6 {
+      margin-top: 1.5rem;
+    }
+
+    .mb-2 {
+      margin-bottom: 0.5rem;
+    }
+
+    .mb-4 {
+      margin-bottom: 1rem;
+    }
+
+    .mb-6 {
+      margin-bottom: 1.5rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .grid-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .score-summary {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .quiz-navigation {
+        flex-direction: column;
+      }
+      
+      .quiz-navigation button {
+        width: 100%;
+      }
+      
+      #progress-table {
+        display: block;
+        overflow-x: auto;
+      }
+      
+      .header-content {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      main {
+        padding: 1rem;
+      }
+      
+      .modal-content {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Confirmation Modal -->
+  <div id="confirm-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('confirm-modal')">&times;</button>
+      <h2 class="modal-title" id="confirm-title">Confirm Action</h2>
+      <p id="confirm-message">Are you sure you want to perform this action?</p>
+      <div class="confirmation-actions">
+        <button id="confirm-cancel" class="secondary-btn" onclick="closeModal('confirm-modal')">Cancel</button>
+        <button id="confirm-ok" class="primary-btn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <i class="fas fa-laptop-code"></i>
+        <span>TechMentor</span>
+      </div>
+      <button id="toggle-dark-mode" class="outline-btn">
+        <i class="fas fa-moon"></i> Dark Mode
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Path Selection Screen -->
+    <div id="path-selection" class="screen active">
+      <h2>Select Your Career Path</h2>
+      <div id="path-grid" class="grid-container"></div>
+    </div>
+
+    <!-- Level Selection Screen -->
+    <div id="level-selection" class="screen">
+      <h2 id="path-title"></h2>
+      <div class="back-button" onclick="goBackToPaths()">
+        <i class="fas fa-arrow-left"></i> Back to Paths
+      </div>
+      
+      <div class="section">
+        <h3>Select Difficulty Level</h3>
+        <div id="level-grid" class="grid-container"></div>
+      </div>
+    </div>
+
+    <!-- Topic Selection Screen -->
+    <div id="topic-selection" class="screen">
+      <h2 id="level-title"></h2>
+      <div class="back-button" onclick="goBackToLevels()">
+        <i class="fas fa-arrow-left"></i> Back to Levels
+      </div>
+      
+      <div class="section">
+        <h3>Topics in this Level</h3>
+        <div id="topic-grid" class="grid-container"></div>
+      </div>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="screen">
+      <div class="quiz-header">
+        <div class="quiz-title">
+          <h2 id="quiz-title"></h2>
+        </div>
+        <div class="progress-info">
+          <div class="progress">Question <span id="current-question-num">1</span> of <span id="total-questions">10</span></div>
+          <div id="timer"><i class="fas fa-clock"></i> <span id="time-display">--:--</span></div>
+        </div>
+      </div>
+      
+      <div class="quiz-controls">
+        <button id="bookmark-question" class="bookmark-btn" title="Bookmark this question">
+          <i class="far fa-bookmark"></i>
+        </button>
+        <div class="question-nav" id="question-nav"></div>
+      </div>
+      
+      <div id="quiz-container">
+        <div class="spinner" id="quiz-spinner"></div>
+        <div id="question-container" class="hidden">
+          <h3 id="question-text"></h3>
+          <div id="options-container" class="options-grid"></div>
+        </div>
+        
+        <div class="quiz-navigation">
+          <div class="quiz-actions">
+            <button id="prev-question" class="nav-btn" disabled>
+              <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            <button id="next-question" class="nav-btn">
+              Next <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          <button id="submit-quiz" class="primary-btn hidden">
+            <i class="fas fa-check"></i> Submit Quiz
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="screen">
+      <h2>Quiz Results</h2>
+      <div class="back-button" onclick="goBackToTopics()">
+        <i class="fas fa-arrow-left"></i> Back to Topics
+      </div>
+      
+      <div class="score-summary">
+        <div class="score-card">
+          <div class="score-value" id="score-percentage">0%</div>
+          <div class="score-label">Score</div>
+        </div>
+        <div class="score-details">
+          <p>You answered <strong id="correct-answers">0</strong> out of <strong id="total-questions-results">10</strong> questions correctly</p>
+          <p>Level: <strong id="result-level"></strong></p>
+          <p>Topic: <strong id="result-topic"></strong></p>
+          <p>Completed: <strong id="result-date"></strong></p>
+          <p>Time Taken: <strong id="result-time"></strong></p>
+          <div class="button-group mt-4">
+            <button class="secondary-btn" onclick="retryQuiz()">
+              <i class="fas fa-redo"></i> Retry Quiz
+            </button>
+            <button class="primary-btn" onclick="viewProgress()">
+              <i class="fas fa-chart-line"></i> View Progress
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <canvas id="progress-chart"></canvas>
+      </div>
+      
+      <div class="section">
+        <div class="quiz-controls">
+          <h3>Question Review</h3>
+          <div class="button-group">
+            <button id="show-all-questions" class="outline-btn active">All Questions</button>
+            <button id="show-correct-questions" class="outline-btn">Correct</button>
+            <button id="show-incorrect-questions" class="outline-btn">Incorrect</button>
+          </div>
+        </div>
+        <div id="question-review"></div>
+      </div>
+    </div>
+
+    <!-- Progress Screen -->
+    <div id="progress-screen" class="screen">
+      <h2>Your Learning Progress</h2>
+      <div class="back-button" onclick="goBackToPaths()">
+        <i class="fas fa-arrow-left"></i> Back to Paths
+      </div>
+      
+      <div class="progress-container">
+        <div class="chart-container">
+          <canvas id="overall-progress-chart"></canvas>
+        </div>
+        
+        <div id="progress-details">
+          <div class="quiz-controls">
+            <h3>Detailed Progress</h3>
+            <div class="button-group">
+              <button id="export-progress" class="outline-btn">
+                <i class="fas fa-file-export"></i> Export Progress
+              </button>
+            </div>
+          </div>
+          <div id="progress-table-container">
+            <table id="progress-table">
+              <thead>
+                <tr>
+                  <th>Path</th>
+                  <th>Level</th>
+                  <th>Topic</th>
+                  <th>Score</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="#" onclick="goBackToPaths()">Learning Paths</a>
+      <a href="#" onclick="viewProgress()">Progress</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </div>
+    <p>&copy; 2023 TechMentor. All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/downloadjs@1.4.7"></script>
+  <script>
+    // Configuration
+    const API_BASE_URL = 'http://localhost:5000';
+    const DEFAULT_QUIZ_TIME_LIMIT = 900; // 15 minutes in seconds
+    const PASSING_SCORE = 70; // Minimum score to unlock next level/topic
+
+    // Global variables
+    let currentPath = '';
+    let currentLevel = '';
+    let currentTopic = '';
+    let currentQuiz = [];
+    let quizAnswers = [];
+    let userAnswers = [];
+    let bookmarkedQuestions = [];
+    let quizSettings = {
+      questionCount: 10
+    };
+    let userId = generateUserId();
+    let userProgress = JSON.parse(localStorage.getItem('userProgress')) || { 
+      scores: {},
+      unlockedLevels: {},
+      unlockedTopics: {},
+      completedTopics: {}
+    };
+    let quizTimer;
+    let timeLeft = DEFAULT_QUIZ_TIME_LIMIT;
+    let quizStartTime;
+    let currentQuizId = '';
+    let currentQuestionIndex = 0;
+    let quizResults = {};
+    let charts = {};
+    let learningPaths = {};
+
+    // DOM Elements
+    const screens = {
+      path: document.getElementById('path-selection'),
+      level: document.getElementById('level-selection'),
+      topic: document.getElementById('topic-selection'),
+      quiz: document.getElementById('quiz-screen'),
+      results: document.getElementById('results-screen'),
+      progress: document.getElementById('progress-screen')
+    };
+
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPaths();
+      setupEventListeners();
+      checkDarkModePreference();
+    });
+
+    // Utility Functions
+    function generateUserId() {
+      let id = localStorage.getItem('userId');
+      if (!id) {
+        id = 'user-' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('userId', id);
+      }
+      return id;
+    }
+
+    function saveProgressToLocalStorage() {
+      localStorage.setItem('userProgress', JSON.stringify(userProgress));
+    }
+
+    function setupEventListeners() {
+      // Quiz controls
+      document.getElementById('prev-question').addEventListener('click', () => navigateQuestion(-1));
+      document.getElementById('next-question').addEventListener('click', () => navigateQuestion(1));
+      document.getElementById('submit-quiz').addEventListener('click', confirmQuizSubmission);
+      document.getElementById('bookmark-question').addEventListener('click', toggleBookmark);
+      
+      // Results filtering
+      document.getElementById('show-all-questions').addEventListener('click', () => filterReviewQuestions('all'));
+      document.getElementById('show-correct-questions').addEventListener('click', () => filterReviewQuestions('correct'));
+      document.getElementById('show-incorrect-questions').addEventListener('click', () => filterReviewQuestions('incorrect'));
+      
+      // Confirmation modal
+      document.getElementById('confirm-ok').addEventListener('click', handleConfirmation);
+      
+      // Export progress
+      document.getElementById('export-progress').addEventListener('click', exportProgress);
+      
+      // Dark mode toggle
+      document.getElementById('toggle-dark-mode').addEventListener('click', toggleDarkMode);
+    }
+
+    // Modal Functions
+    function showModal(modalId) {
+      document.getElementById(modalId).classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function showConfirmationModal(title, message, callback) {
+      document.getElementById('confirm-title').textContent = title;
+      document.getElementById('confirm-message').textContent = message;
+      document.getElementById('confirm-ok').onclick = callback;
+      showModal('confirm-modal');
+    }
+
+    function handleConfirmation() {
+      closeModal('confirm-modal');
+    }
+
+    // Navigation Functions
+    function switchScreen(screenName) {
+      Object.values(screens).forEach(screen => screen.classList.remove('active'));
+      screens[screenName].classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function goBackToPaths() {
+      switchScreen('path');
+    }
+
+    function goBackToLevels() {
+      switchScreen('level');
+    }
+
+    function goBackToTopics() {
+      switchScreen('topic');
+    }
+
+    function viewProgress() {
+      renderProgressScreen();
+      switchScreen('progress');
+    }
+
+    // Path and Level Selection
+    async function loadPaths() {
+      try {
+        // First try to get AI-generated learning paths
+        const response = await fetch(`${API_BASE_URL}/get-learning-paths`);
+        if (response.ok) {
+          learningPaths = await response.json();
+        } else {
+          // Fallback to default paths if API fails
+          learningPaths = {
+            'cybersecurity': {
+              name: 'Cybersecurity',
+              icon: 'fa-shield-halved',
+              description: 'Learn to protect systems and networks from digital attacks',
+              levels: {
+                'Beginner': {
+                  description: 'Fundamentals of cybersecurity concepts and practices',
+                  topics: ['Introduction to Cybersecurity', 'Basic Security Concepts', 'Common Threats']
+                },
+                'Intermediate': {
+                  description: 'Advanced security techniques and ethical hacking',
+                  topics: ['Network Security', 'Cryptography', 'Ethical Hacking']
+                },
+                'Advanced': {
+                  description: 'Expert-level penetration testing and security architecture',
+                  topics: ['Penetration Testing', 'Security Architecture', 'Incident Response']
+                }
+              }
+            },
+            'mern-stack': {
+              name: 'MERN Stack',
+              icon: 'fa-code',
+              description: 'Master full-stack development with MongoDB, Express, React, and Node.js',
+              levels: {
+                'Beginner': {
+                  description: 'Introduction to web development and JavaScript',
+                  topics: ['HTML/CSS Basics', 'JavaScript Fundamentals', 'React Introduction']
+                },
+                'Intermediate': {
+                  description: 'Building full-stack applications with MERN',
+                  topics: ['Node.js Basics', 'Express Framework', 'MongoDB Basics']
+                },
+                'Advanced': {
+                  description: 'Advanced patterns and deployment strategies',
+                  topics: ['Full Stack Projects', 'Authentication', 'Deployment']
+                }
+              }
+            }
+          };
+        }
+        
+        renderPaths(Object.entries(learningPaths));
+      } catch (error) {
+        console.error('Error loading paths:', error);
+        document.getElementById('path-grid').innerHTML = `
+          <div class="error-message">
+            <p>Failed to load learning paths</p>
+            <button class="primary-btn" onclick="loadPaths()">
+              <i class="fas fa-sync-alt"></i> Retry
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    function renderPaths(paths) {
+      const pathGrid = document.getElementById('path-grid');
+      pathGrid.innerHTML = '';
+      
+      paths.forEach(([id, path]) => {
+        const card = document.createElement('div');
+        card.className = 'path-card';
+        
+        // Calculate progress for this path
+        const progress = calculatePathProgress(id);
+        
+        card.innerHTML = `
+          <div class="path-icon">
+            <i class="fas ${path.icon}"></i>
+          </div>
+          <h3>${path.name}</h3>
+          <p class="path-description">${path.description}</p>
+          <div class="progress-indicator">
+            <div class="progress-fill" style="width: ${progress}%"></div>
+          </div>
+          <span class="badge badge-primary">${Math.round(progress)}% Complete</span>
+        `;
+        
+        card.addEventListener('click', () => selectPath(id, path.name));
+        pathGrid.appendChild(card);
+      });
+    }
+
+    function calculatePathProgress(pathId) {
+      const pathData = userProgress.scores[pathId];
+      if (!pathData) return 0;
+      
+      let totalTopics = 0;
+      let completedTopics = 0;
+      
+      // Count all topics in the path
+      for (const level in learningPaths[pathId].levels) {
+        totalTopics += learningPaths[pathId].levels[level].topics.length;
+      }
+      
+      // Count completed topics
+      for (const level in pathData) {
+        completedTopics += Object.keys(pathData[level]).length;
+      }
+      
+      return totalTopics > 0 ? (completedTopics / totalTopics) * 100 : 0;
+    }
+
+    function selectPath(path, name) {
+      currentPath = path;
+      document.getElementById('path-title').textContent = name;
+      loadLevels(path);
+      switchScreen('level');
+    }
+
+    function loadLevels(path) {
+      try {
+        const pathData = learningPaths[path];
+        const levelGrid = document.getElementById('level-grid');
+        levelGrid.innerHTML = '';
+        
+        Object.entries(pathData.levels).forEach(([levelId, levelData], index) => {
+          const card = document.createElement('div');
+          card.className = 'level-card';
+          
+          // Check if level is unlocked (first level is always unlocked)
+          const isUnlocked = index === 0 || isLevelUnlocked(path, levelId);
+          const progress = calculateLevelProgress(path, levelId);
+          
+          card.innerHTML = `
+            <h3>${levelId}</h3>
+            <p>${levelData.description}</p>
+            <div class="progress-indicator">
+              <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+            <span class="badge ${
+              levelId === 'Beginner' ? 'badge-success' : 
+              levelId === 'Intermediate' ? 'badge-warning' : 'badge-danger'
+            }">${levelId}</span>
+            ${!isUnlocked ? `
+              <div class="locked-overlay">
+                <i class="fas fa-lock"></i>
+                Complete previous level to unlock
+              </div>
+            ` : ''}
+          `;
+          
+          if (isUnlocked) {
+            card.addEventListener('click', () => selectLevel(path, levelId, levelData.topics));
+          } else {
+            card.style.cursor = 'not-allowed';
+          }
+          
+          levelGrid.appendChild(card);
+        });
+      } catch (error) {
+        console.error('Error loading levels:', error);
+        alert('Failed to load levels. Please try again.');
+      }
+    }
+
+    function isLevelUnlocked(path, level) {
+      // First level is always unlocked
+      const levels = Object.keys(learningPaths[path].levels);
+      if (levels.indexOf(level) === 0) return true;
+      
+      // Check if previous level is completed
+      const previousLevel = levels[levels.indexOf(level) - 1];
+      const previousLevelTopics = learningPaths[path].levels[previousLevel].topics;
+      
+      // Check if all topics in previous level are completed
+      for (const topic of previousLevelTopics) {
+        if (!isTopicCompleted(path, previousLevel, topic)) {
+          return false;
+        }
+      }
+      
+      return true;
+    }
+
+    function calculateLevelProgress(path, level) {
+      const levelData = userProgress.scores[path]?.[level] || {};
+      const topics = learningPaths[path].levels[level].topics;
+      
+      if (topics.length === 0) return 0;
+      
+      const completedTopics = Object.keys(levelData).length;
+      return (completedTopics / topics.length) * 100;
+    }
+
+    function selectLevel(path, level, topics) {
+      currentPath = path;
+      currentLevel = level;
+      
+      document.getElementById('level-title').textContent = 
+        `${learningPaths[path].name}: ${level}`;
+      
+      loadTopics(path, level, topics);
+      switchScreen('topic');
+    }
+
+    function loadTopics(path, level, topics) {
+      try {
+        const topicGrid = document.getElementById('topic-grid');
+        topicGrid.innerHTML = '';
+        
+        topics.forEach((topic, index) => {
+          const card = document.createElement('div');
+          card.className = 'topic-card';
+          
+          // Check if topic is unlocked (first topic is always unlocked)
+          const isUnlocked = index === 0 || isTopicUnlocked(path, level, topic);
+          const isCompleted = isTopicCompleted(path, level, topic);
+          const score = getTopicScore(path, level, topic);
+          
+          card.innerHTML = `
+            <h3>${topic}</h3>
+            <p>${getTopicDescription(path, level, topic)}</p>
+            ${isCompleted ? `
+              <div class="progress-indicator">
+                <div class="progress-fill" style="width: ${score}%"></div>
+              </div>
+              <span class="badge badge-success">${score}%</span>
+            ` : ''}
+            <div class="topic-status ${isCompleted ? 'completed' : isUnlocked ? '' : 'locked'}">
+              <i class="fas ${isCompleted ? 'fa-check-circle' : isUnlocked ? 'fa-play-circle' : 'fa-lock'}"></i>
+            </div>
+            ${!isUnlocked ? `
+              <div class="locked-overlay">
+                <i class="fas fa-lock"></i>
+                Complete previous topics to unlock
+              </div>
+            ` : ''}
+          `;
+          
+          if (isUnlocked) {
+            card.addEventListener('click', () => selectTopic(path, level, topic));
+          } else {
+            card.style.cursor = 'not-allowed';
+          }
+          
+          topicGrid.appendChild(card);
+        });
+      } catch (error) {
+        console.error('Error loading topics:', error);
+        alert('Failed to load topics. Please try again.');
+      }
+    }
+
+    function isTopicUnlocked(path, level, topic) {
+      const topics = learningPaths[path].levels[level].topics;
+      const topicIndex = topics.indexOf(topic);
+      
+      // First topic is always unlocked
+      if (topicIndex === 0) return true;
+      
+      // Check if previous topic is completed
+      const previousTopic = topics[topicIndex - 1];
+      return isTopicCompleted(path, level, previousTopic);
+    }
+
+    function isTopicCompleted(path, level, topic) {
+      return !!userProgress.scores[path]?.[level]?.[topic];
+    }
+
+    function getTopicScore(path, level, topic) {
+      return userProgress.scores[path]?.[level]?.[topic] || 0;
+    }
+
+    function getTopicDescription(path, level, topic) {
+      // In a real app, this would come from the backend or a more detailed data structure
+      return `Learn about ${topic} in ${level} level`;
+    }
+
+    function selectTopic(path, level, topic) {
+      currentPath = path;
+      currentLevel = level;
+      currentTopic = topic;
+      
+      // Start the quiz for this topic
+      startQuiz();
+    }
+
+    // Quiz Functions
+    async function startQuiz() {
+      try {
+        document.getElementById('quiz-spinner').classList.remove('hidden');
+        document.getElementById('question-container').classList.add('hidden');
+        
+        const response = await fetch(`${API_BASE_URL}/generate-quiz`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            path: currentPath,
+            level: currentLevel,
+            topic: currentTopic,
+            questionCount: quizSettings.questionCount
+          })
+        });
+
+        if (!response.ok) throw new Error('Failed to generate quiz');
+        const quizData = await response.json();
+        currentQuizId = Date.now().toString();
+
+        // Process quiz data
+        currentQuiz = quizData.questions;
+        quizAnswers = currentQuiz.map(q => q.correctAnswer);
+        userAnswers = Array(currentQuiz.length).fill(null);
+        bookmarkedQuestions = Array(currentQuiz.length).fill(false);
+        currentQuestionIndex = 0;
+        
+        // Update UI
+        document.getElementById('quiz-title').textContent = 
+          `${learningPaths[currentPath].name}: ${currentTopic}`;
+        document.getElementById('total-questions').textContent = currentQuiz.length;
+        
+        // Start timer
+        timeLeft = DEFAULT_QUIZ_TIME_LIMIT;
+        startTimer();
+        
+        quizStartTime = new Date();
+        
+        document.getElementById('quiz-spinner').classList.add('hidden');
+        document.getElementById('question-container').classList.remove('hidden');
+        renderQuestionNavigation();
+        showQuestion(0);
+        switchScreen('quiz');
+      } catch (error) {
+        console.error('Failed to start quiz:', error);
+        alert('Failed to generate quiz. Please try again.');
+      }
+    }
+
+    function startTimer() {
+      clearInterval(quizTimer);
+      updateTimerDisplay();
+      
+      quizTimer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        
+        if (timeLeft <= 0) {
+          clearInterval(quizTimer);
+          submitQuiz();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      const timerElement = document.getElementById('time-display');
+      const timerContainer = document.getElementById('timer');
+      
+      timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      // Update timer styling based on remaining time
+      timerContainer.classList.remove('warning', 'danger');
+      if (timeLeft <= 60) {
+        timerContainer.classList.add('danger');
+      } else if (timeLeft <= 180) {
+        timerContainer.classList.add('warning');
+      }
+    }
+
+    function renderQuestionNavigation() {
+      const navContainer = document.getElementById('question-nav');
+      navContainer.innerHTML = '';
+      
+      currentQuiz.forEach((_, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'question-nav-btn';
+        btn.textContent = index + 1;
+        btn.dataset.index = index;
+        
+        if (index === currentQuestionIndex) {
+          btn.classList.add('current');
+        }
+        
+        if (userAnswers[index] !== null) {
+          btn.classList.add('answered');
+        }
+        
+        if (bookmarkedQuestions[index]) {
+          btn.classList.add('marked');
+        }
+        
+        btn.addEventListener('click', () => showQuestion(index));
+        navContainer.appendChild(btn);
+      });
+    }
+
+    function showQuestion(index) {
+      if (index < 0 || index >= currentQuiz.length) return;
+      
+      currentQuestionIndex = index;
+      const question = currentQuiz[index];
+      document.getElementById('question-text').textContent = question.question;
+      document.getElementById('current-question-num').textContent = index + 1;
+      
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+      
+      question.options.forEach((option, i) => {
+        const optionBtn = document.createElement('button');
+        optionBtn.className = 'option-btn';
+        if (userAnswers[index] === i) optionBtn.classList.add('selected');
+        optionBtn.textContent = option;
+        optionBtn.addEventListener('click', () => selectAnswer(index, i));
+        optionsContainer.appendChild(optionBtn);
+      });
+      
+      // Update bookmark button
+      const bookmarkBtn = document.getElementById('bookmark-question');
+      if (bookmarkedQuestions[index]) {
+        bookmarkBtn.innerHTML = '<i class="fas fa-bookmark"></i>';
+        bookmarkBtn.classList.add('bookmarked');
+      } else {
+        bookmarkBtn.innerHTML = '<i class="far fa-bookmark"></i>';
+        bookmarkBtn.classList.remove('bookmarked');
+      }
+      
+      // Update navigation buttons
+      document.getElementById('prev-question').disabled = index === 0;
+      const isLastQuestion = index === currentQuiz.length - 1;
+      document.getElementById('next-question').classList.toggle('hidden', isLastQuestion);
+      document.getElementById('submit-quiz').classList.toggle('hidden', !isLastQuestion);
+      
+      // Update question nav buttons
+      renderQuestionNavigation();
+    }
+
+    function selectAnswer(questionIndex, answerIndex) {
+      userAnswers[questionIndex] = answerIndex;
+      
+      const options = document.querySelectorAll('.option-btn');
+      options.forEach((btn, i) => {
+        btn.classList.toggle('selected', i === answerIndex);
+      });
+      
+      // Update the navigation button
+      renderQuestionNavigation();
+    }
+
+    function toggleBookmark() {
+      bookmarkedQuestions[currentQuestionIndex] = !bookmarkedQuestions[currentQuestionIndex];
+      const bookmarkBtn = document.getElementById('bookmark-question');
+      
+      if (bookmarkedQuestions[currentQuestionIndex]) {
+        bookmarkBtn.innerHTML = '<i class="fas fa-bookmark"></i>';
+        bookmarkBtn.classList.add('bookmarked');
+      } else {
+        bookmarkBtn.innerHTML = '<i class="far fa-bookmark"></i>';
+        bookmarkBtn.classList.remove('bookmarked');
+      }
+      
+      renderQuestionNavigation();
+    }
+
+    function navigateQuestion(direction) {
+      showQuestion(currentQuestionIndex + direction);
+    }
+
+    function confirmQuizSubmission() {
+      const unanswered = userAnswers.filter(a => a === null).length;
+      const marked = bookmarkedQuestions.filter(b => b).length;
+      
+      let message = 'Are you sure you want to submit your quiz?';
+      if (unanswered > 0) {
+        message += `\n\nYou have ${unanswered} unanswered question${unanswered > 1 ? 's' : ''}.`;
+      }
+      if (marked > 0) {
+        message += `\nYou have ${marked} bookmarked question${marked > 1 ? 's' : ''}.`;
+      }
+      
+      showConfirmationModal('Submit Quiz', message, submitQuiz);
+    }
+
+    async function submitQuiz() {
+      try {
+        clearInterval(quizTimer);
+        const quizEndTime = new Date();
+        const timeTaken = Math.floor((quizEndTime - quizStartTime) / 1000);
+        
+        const results = currentQuiz.map((q, i) => ({
+          question: q.question,
+          userAnswer: userAnswers[i],
+          correctAnswer: q.correctAnswer,
+          isCorrect: userAnswers[i] === q.correctAnswer,
+          explanation: q.explanation,
+          options: q.options,
+          bookmarked: bookmarkedQuestions[i]
+        }));
+        
+        const score = results.filter(r => r.isCorrect).length;
+        const percentage = Math.round((score / results.length) * 100);
+        
+        quizResults = {
+          path: currentPath,
+          level: currentLevel,
+          topic: currentTopic,
+          score,
+          percentage,
+          total: results.length,
+          timeTaken,
+          results,
+          date: new Date().toISOString()
+        };
+        
+        await saveProgress();
+        showResults();
+      } catch (error) {
+        console.error('Error submitting quiz:', error);
+        alert('Failed to submit quiz. Please try again.');
+      }
+    }
+
+    async function saveProgress() {
+      try {
+        // Save the quiz result
+        if (!userProgress.scores[currentPath]) {
+          userProgress.scores[currentPath] = {};
+        }
+        if (!userProgress.scores[currentPath][currentLevel]) {
+          userProgress.scores[currentPath][currentLevel] = {};
+        }
+        userProgress.scores[currentPath][currentLevel][currentTopic] = quizResults.percentage;
+        
+        // Mark topic as completed if passing score
+        if (quizResults.percentage >= PASSING_SCORE) {
+          if (!userProgress.completedTopics[currentPath]) {
+            userProgress.completedTopics[currentPath] = {};
+          }
+          if (!userProgress.completedTopics[currentPath][currentLevel]) {
+            userProgress.completedTopics[currentPath][currentLevel] = {};
+          }
+          userProgress.completedTopics[currentPath][currentLevel][currentTopic] = true;
+          
+          // Check if we should unlock the next topic or level
+          checkForUnlocks();
+        }
+        
+        saveProgressToLocalStorage();
+        
+        // Send to backend
+        const response = await fetch(`${API_BASE_URL}/save-progress`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId,
+            quizId: currentQuizId,
+            ...quizResults
+          })
+        });
+
+        if (!response.ok) throw new Error('Failed to save progress');
+      } catch (error) {
+        console.error('Error saving progress:', error);
+      }
+    }
+
+    function checkForUnlocks() {
+      const topics = learningPaths[currentPath].levels[currentLevel].topics;
+      const topicIndex = topics.indexOf(currentTopic);
+      
+      // Check if we should unlock the next topic in this level
+      if (topicIndex < topics.length - 1) {
+        const nextTopic = topics[topicIndex + 1];
+        if (!userProgress.unlockedTopics[currentPath]) {
+          userProgress.unlockedTopics[currentPath] = {};
+        }
+        if (!userProgress.unlockedTopics[currentPath][currentLevel]) {
+          userProgress.unlockedTopics[currentPath][currentLevel] = {};
+        }
+        userProgress.unlockedTopics[currentPath][currentLevel][nextTopic] = true;
+      }
+      
+      // Check if we completed all topics in this level
+      const allTopicsCompleted = topics.every(topic => 
+        userProgress.completedTopics[currentPath]?.[currentLevel]?.[topic]
+      );
+      
+      if (allTopicsCompleted) {
+        // Check if there's a next level to unlock
+        const levels = Object.keys(learningPaths[currentPath].levels);
+        const levelIndex = levels.indexOf(currentLevel);
+        
+        if (levelIndex < levels.length - 1) {
+          const nextLevel = levels[levelIndex + 1];
+          if (!userProgress.unlockedLevels[currentPath]) {
+            userProgress.unlockedLevels[currentPath] = {};
+          }
+          userProgress.unlockedLevels[currentPath][nextLevel] = true;
+        }
+      }
+      
+      saveProgressToLocalStorage();
+    }
+
+    async function loadProgress() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/get-progress/${userId}`);
+        
+        if (response.ok) {
+          const data = await response.json();
+          userProgress = data.progress;
+          saveProgressToLocalStorage();
+        } else {
+          const progress = localStorage.getItem('userProgress');
+          userProgress = progress ? JSON.parse(progress) : { 
+            scores: {},
+            unlockedLevels: {},
+            unlockedTopics: {},
+            completedTopics: {}
+          };
+        }
+      } catch (error) {
+        console.error('Error fetching progress:', error);
+        const progress = localStorage.getItem('userProgress');
+        userProgress = progress ? JSON.parse(progress) : { 
+          scores: {},
+          unlockedLevels: {},
+          unlockedTopics: {},
+          completedTopics: {}
+        };
+      }
+    }
+
+    // Results Screen
+    function showResults() {
+      document.getElementById('score-percentage').textContent = `${quizResults.percentage}%`;
+      document.getElementById('correct-answers').textContent = quizResults.score;
+      document.getElementById('total-questions-results').textContent = quizResults.total;
+      document.getElementById('result-level').textContent = quizResults.level;
+      document.getElementById('result-topic').textContent = quizResults.topic;
+      document.getElementById('result-date').textContent = new Date(quizResults.date).toLocaleString();
+      
+      // Format time taken
+      const minutes = Math.floor(quizResults.timeTaken / 60);
+      const seconds = quizResults.timeTaken % 60;
+      document.getElementById('result-time').textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      createProgressChart(quizResults.percentage);
+      renderQuestionReview(quizResults.results);
+      switchScreen('results');
+    }
+
+    function createProgressChart(score) {
+      const ctx = document.getElementById('progress-chart').getContext('2d');
+      
+      if (charts.resultsChart) {
+        charts.resultsChart.destroy();
+      }
+      
+      charts.resultsChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Correct', 'Incorrect'],
+          datasets: [{
+            data: [score, 100 - score],
+            backgroundColor: [
+              document.body.classList.contains('dark-mode') ? '#4a6fa5' : '#28a745',
+              document.body.classList.contains('dark-mode') ? '#444' : '#dc3545'
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: document.body.classList.contains('dark-mode') ? '#e0e0e0' : '#333'
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.label}: ${context.raw}%`;
+                }
+              }
+            }
+          },
+          cutout: '70%'
+        }
+      });
+    }
+
+    function renderQuestionReview(results, filter = 'all') {
+      const questionReview = document.getElementById('question-review');
+      questionReview.innerHTML = '';
+      
+      // Update filter buttons
+      document.getElementById('show-all-questions').classList.toggle('active', filter === 'all');
+      document.getElementById('show-correct-questions').classList.toggle('active', filter === 'correct');
+      document.getElementById('show-incorrect-questions').classList.toggle('active', filter === 'incorrect');
+      
+      results.forEach((result, i) => {
+        if (filter === 'correct' && !result.isCorrect) return;
+        if (filter === 'incorrect' && result.isCorrect) return;
+        
+        const item = document.createElement('div');
+        item.className = `review-item ${result.isCorrect ? 'correct' : 'incorrect'}`;
+        
+        item.innerHTML = `
+          <div class="review-question">
+            ${i+1}. ${result.question}
+            ${result.bookmarked ? '<span class="badge badge-warning" style="margin-left: 0.5rem;"><i class="fas fa-bookmark"></i> Bookmarked</span>' : ''}
+          </div>
+          <div class="review-answer ${result.isCorrect ? 'correct' : 'incorrect'}">
+            <i class="fas ${result.isCorrect ? 'fa-check' : 'fa-times'}"></i>
+            Your answer: ${result.userAnswer !== null ? result.options[result.userAnswer] : 'Not answered'}
+          </div>
+          ${!result.isCorrect ? `
+            <div class="review-answer correct">
+              <i class="fas fa-check"></i>
+              Correct answer: ${result.options[result.correctAnswer]}
+            </div>
+          ` : ''}
+          <div class="review-explanation">
+            <strong>Explanation:</strong> ${result.explanation}
+          </div>
+        `;
+        
+        questionReview.appendChild(item);
+      });
+    }
+
+    function filterReviewQuestions(filter) {
+      renderQuestionReview(quizResults.results, filter);
+    }
+
+    function retryQuiz() {
+      startQuiz();
+    }
+
+    // Progress Screen
+    function renderProgressScreen() {
+      createOverallProgressChart();
+      renderProgressTable();
+    }
+
+    function createOverallProgressChart() {
+      const ctx = document.getElementById('overall-progress-chart').getContext('2d');
+      const scores = userProgress.scores || {};
+      const paths = Object.keys(scores);
+      
+      if (!paths.length) {
+        document.getElementById('overall-progress-chart').style.display = 'none';
+        document.getElementById('progress-details').innerHTML = 
+          '<p>No progress data available yet. Complete some quizzes to see your progress.</p>';
+        return;
+      }
+      
+      document.getElementById('overall-progress-chart').style.display = 'block';
+      
+      if (charts.progressChart) {
+        charts.progressChart.destroy();
+      }
+      
+      const levels = ['Beginner', 'Intermediate', 'Advanced'];
+      const datasets = paths.map(path => {
+        const pathData = scores[path];
+        const data = levels.map(level => {
+          if (!pathData[level]) return 0;
+          const topics = Object.values(pathData[level]);
+          return Math.round(topics.reduce((sum, score) => sum + score, 0) / topics.length);
+        });
+        
+        return {
+          label: learningPaths[path]?.name || path,
+          data: data,
+          backgroundColor: getRandomColor(),
+          borderColor: document.body.classList.contains('dark-mode') ? '#444' : '#fff',
+          borderWidth: 1
+        };
+      });
+      
+      charts.progressChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: levels,
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { 
+              beginAtZero: true, 
+              max: 100,
+              title: {
+                display: true,
+                text: 'Average Score (%)',
+                color: document.body.classList.contains('dark-mode') ? '#e0e0e0' : '#333'
+              },
+              ticks: {
+                color: document.body.classList.contains('dark-mode') ? '#e0e0e0' : '#333'
+              },
+              grid: {
+                color: document.body.classList.contains('dark-mode') ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+              }
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Difficulty Level',
+                color: document.body.classList.contains('dark-mode') ? '#e0e0e0' : '#333'
+              },
+              ticks: {
+                color: document.body.classList.contains('dark-mode') ? '#e0e0e0' : '#333'
+              },
+              grid: {
+                color: document.body.classList.contains('dark-mode') ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: document.body.classList.contains('dark-mode') ? '#e0e0e0' : '#333'
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.dataset.label}: ${context.raw}%`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function renderProgressTable() {
+      const tableContainer = document.getElementById('progress-table-container');
+      const scores = userProgress.scores || {};
+      
+      if (!Object.keys(scores).length) {
+        tableContainer.innerHTML = '<p>No quiz results yet. Complete some quizzes to track your progress.</p>';
+        return;
+      }
+      
+      let tableHTML = `
+        <table id="progress-table">
+          <thead>
+            <tr>
+              <th>Path</th>
+              <th>Level</th>
+              <th>Topic</th>
+              <th>Score</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      
+      Object.entries(scores).forEach(([path, pathData]) => {
+        Object.entries(pathData).forEach(([level, levelData]) => {
+          Object.entries(levelData).forEach(([topic, score]) => {
+            tableHTML += `
+              <tr>
+                <td>${learningPaths[path]?.name || path}</td>
+                <td>${level}</td>
+                <td>${topic}</td>
+                <td>
+                  <div class="progress-container-cell">
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width: ${score}%"></div>
+                    </div>
+                    <span>${score}%</span>
+                  </div>
+                </td>
+                <td>${new Date().toLocaleDateString()}</td>
+                <td>
+                  <button class="outline-btn" onclick="retryQuizFromProgress('${path}', '${level}', '${topic}')">
+                    <i class="fas fa-redo"></i> Retry
+                  </button>
+                </td>
+              </tr>
+            `;
+          });
+        });
+      });
+      
+      tableHTML += `
+          </tbody>
+        </table>
+      `;
+      
+      tableContainer.innerHTML = tableHTML;
+    }
+
+    function retryQuizFromProgress(path, level, topic) {
+      currentPath = path;
+      currentLevel = level;
+      currentTopic = topic;
+      startQuiz();
+    }
+
+    async function exportProgress() {
+      try {
+        // Generate a simple text report
+        const scores = userProgress.scores || {};
+        let content = `TechMentor Progress Report\n`;
+        content += `Generated on: ${new Date().toLocaleString()}\n\n`;
+        
+        Object.entries(scores).forEach(([path, pathData]) => {
+          content += `\n${learningPaths[path]?.name || path}:\n`;
+          Object.entries(pathData).forEach(([level, levelData]) => {
+            content += `  ${level}:\n`;
+            Object.entries(levelData).forEach(([topic, score]) => {
+              content += `    ${topic}: ${score}%\n`;
+            });
+          });
+        });
+        
+        const blob = new Blob([content], { type: 'text/plain' });
+        download(blob, `techmentor-progress-${new Date().toISOString().split('T')[0]}.txt`);
+        
+        alert('Progress exported successfully!');
+      } catch (error) {
+        console.error('Error exporting progress:', error);
+        alert('Failed to export progress. Please try again.');
+      }
+    }
+
+    // Utility Functions
+    function getRandomColor() {
+      const hue = Math.floor(Math.random() * 360);
+      return `hsla(${hue}, 70%, 60%, 0.7)`;
+    }
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function checkDarkModePreference() {
+      if (localStorage.getItem('darkMode') === 'enabled' || 
+          (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.body.classList.add('dark-mode');
+        document.getElementById('toggle-dark-mode').innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+      }
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDarkMode = document.body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+      
+      const icon = document.querySelector('#toggle-dark-mode i');
+      const text = document.querySelector('#toggle-dark-mode');
+      if (isDarkMode) {
+        icon.classList.replace('fa-moon', 'fa-sun');
+        text.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+      } else {
+        icon.classList.replace('fa-sun', 'fa-moon');
+        text.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+      }
+      
+      // Update charts if they exist
+      if (charts.resultsChart) {
+        charts.resultsChart.update();
+      }
+      if (charts.progressChart) {
+        charts.progressChart.update();
+      }
+    }
+  </script>
+</body>
+</html>

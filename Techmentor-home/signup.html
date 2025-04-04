@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Guide - Sign Up</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dark-mode">
+  <div class="theme-toggle">
+    <i class="fas fa-moon"></i>
+    <i class="fas fa-sun"></i>
+  </div>
+  
+  <div class="auth-container">
+    <div id="create-acct">
+      <div class="logo">
+        <i class="fas fa-user-plus"></i>
+        <span>Create Account</span>
+      </div>
+      <h1>Join CourseGuide</h1>
+      
+      <div class="two-column">
+        <div class="input-group">
+          <input id="first-name" type="text" placeholder=" " required>
+          <label for="first-name">First Name</label>
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="input-group">
+          <input id="last-name" type="text" placeholder=" " required>
+          <label for="last-name">Last Name</label>
+          <i class="fas fa-user"></i>
+        </div>
+      </div>
+      
+      <div class="input-group">
+        <input id="email-signup" type="email" placeholder=" " required>
+        <label for="email-signup">Email</label>
+        <i class="fas fa-envelope"></i>
+      </div>
+      
+      <div class="input-group">
+        <input id="password-signup" type="password" placeholder=" " required>
+        <label for="password-signup">Password</label>
+        <i class="fas fa-lock"></i>
+        <span class="toggle-password"><i class="fas fa-eye"></i></span>
+        <div class="password-strength"></div>
+      </div>
+      <div class="input-group">
+        <input id="confirm-password-signup" type="password" placeholder=" " required>
+        <label for="confirm-password-signup">Confirm Password</label>
+        <i class="fas fa-lock"></i>
+        <span class="toggle-password"><i class="fas fa-eye"></i></span>
+      </div>
+      
+      <div class="terms">
+        <label class="checkbox-container">
+          <input type="checkbox" id="accept-terms" required>
+          <span class="checkmark"></span>
+          <span class="terms-text">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+        </label>
+      </div>
+      
+      <button id="create-acct-btn" class="btn-primary">
+        <span>Create Account</span>
+        <i class="fas fa-user-plus"></i>
+      </button>
+      <!-- Change the return button to an anchor tag -->
+      <a href="index.html" class="btn-secondary" id="return-btn">
+        <span>Already have an account? Sign In</span>
+      </a>
+    </div>
+  </div>
+  
+  <div id="toast"></div>
+  
+  <script type="module" src="scripts/auth.js"></script>
+  <!-- Add this with your other scripts -->
+<script src="scripts/navigation.js"></script>
+<script src="scripts/page-transitions.js"></script>
+<div class="page-transition"></div>
+</body>
+</html>

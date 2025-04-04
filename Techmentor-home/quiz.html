@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personalized Learning Quiz</title>
+  <link rel="stylesheet" href="styles/quiz.css">
+  <style>
+    .quiz-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    .quiz-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .quiz-header h1 {
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+    .progress-bar {
+      height: 10px;
+      background: #ecf0f1;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    .progress {
+      height: 100%;
+      background: #3498db;
+      width: 0;
+      transition: width 0.3s ease;
+    }
+    .quiz-body {
+      margin-bottom: 2rem;
+    }
+    .question {
+      margin-bottom: 1.5rem;
+    }
+    .question h3 {
+      margin-bottom: 1rem;
+      color: #2c3e50;
+    }
+    .option {
+      margin: 0.5rem 0;
+      display: flex;
+      align-items: center;
+    }
+    .option input {
+      margin-right: 0.5rem;
+    }
+    .quiz-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    #prev-btn, #next-btn, #submit-btn {
+      background: #3498db;
+      color: white;
+    }
+    #prev-btn:hover, #next-btn:hover, #submit-btn:hover {
+      background: #2980b9;
+    }
+    #prev-btn:disabled {
+      background: #bdc3c7;
+      cursor: not-allowed;
+    }
+    #question-counter {
+      font-weight: bold;
+      color: #7f8c8d;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #bdc3c7;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div class="quiz-header">
+      <h1>Personalized Learning Quiz</h1>
+      <p>Answer these questions to help us customize your learning experience</p>
+      <div class="progress-bar">
+        <div class="progress" id="quiz-progress"></div>
+      </div>
+    </div>
+    
+    <div class="quiz-body">
+      <form id="quiz-form">
+        <!-- Questions will be inserted here by JavaScript -->
+      </form>
+    </div>
+    
+    <div class="quiz-footer">
+      <button id="prev-btn" disabled>Previous</button>
+      <span id="question-counter">Question 1 of 10</span>
+      <button id="next-btn">Next</button>
+      <button id="submit-btn" style="display:none;">Submit & Continue</button>
+    </div>
+  </div>
+
+  <script src="scripts/quiz.js"></script>
+</body>
+</html>
